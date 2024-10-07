@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createSession } from "./session";
+import { postData } from "./apiClient";
 
 export async function logout() {
   cookies().delete("session");
@@ -23,16 +24,8 @@ export async function signup(prevState: unknown, formData: FormData) {
   };
 
   try {
-    const response = await fetch("http://localhost:8000/pet-owners/signup", {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(petOwner),
-    });
+    const result: any = await postData("/pet-owners/signup", petOwner);
 
-    const result = await response.json();
     if (result.success === false) {
       return result;
     } else {
