@@ -22,7 +22,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </Head>
-      <body className={`antialiased bg-secondary min-h-lvh`}>{children}</body>
+      <body className={`antialiased min-h-lvh`}>{children}</body>
     </html>
   );
 }

@@ -46,7 +46,7 @@ axiosClient.interceptors.response.use(
     // Handle errors globally, you can customize this based on your API structure
     if (error.response) {
       // Server-side error
-      console.error("Error response:", error.response);
+      console.error("Error response:", error.response.data);
     } else if (error.request) {
       // Network error
       console.error("Error request:", error.request);

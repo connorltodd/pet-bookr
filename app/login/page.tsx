@@ -52,30 +52,12 @@ export default function Login() {
             />
           </label>
         </div>
-        {formState?.errors.length ? (
-          <ul>
+        <div className="space-y-0.5">
+          <div>
             {/* @ts-ignore */}
-            {formState.errors.map((error) => {
-              return error.validation === "regex" ? (
-                <>
-                  <p className="font-bold">
-                    Password must contain the following:
-                  </p>
-                  <ul className="list-disc ml-4 mt-2">
-                    <li>8 characters</li>
-                    <li>One uppercase letter</li>
-                    <li>One lowercase letter</li>
-                    <li>One special character</li>
-                  </ul>
-                </>
-              ) : (
-                <p className="font-bold" key={error.message}>
-                  {error.message}
-                </p>
-              );
-            })}
-          </ul>
-        ) : null}
+            <p className="font-bold text-md">{formState?.errors[0]?.message}</p>
+          </div>
+        </div>
         <FormButton title="Login" loadingMessage="Loading..." />
         <p className="text-center mt-2 link">
           <Link href="/signup">Create a new account</Link>

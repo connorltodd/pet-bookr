@@ -4,6 +4,8 @@
 
 body {
   font-family: 'Bricolage Grotesque', sans-serif;
+  background-color: #E7E1D9;
+  min-height: 100vh;
 }
 
 /* :root {

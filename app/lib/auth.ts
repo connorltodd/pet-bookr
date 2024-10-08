@@ -26,14 +26,14 @@ export async function signup(prevState: unknown, formData: FormData) {
   try {
     const result: any = await postData("/pet-owners/signup", petOwner);
 
-    if (result.success === false) {
-      return result;
-    } else {
+    if (result.success === true) {
       const userId = result.data.user.id;
       await createSession(userId);
     }
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    if (error?.response?.data?.success === false) {
+      return error.response.data;
+    }
   }
 
   redirect("/dashboard");
@@ -43,24 +43,19 @@ export async function login(prevState: unknown, formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   try {
-    const response = await fetch("http://localhost:8000/pet-owners/login", {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify({ email, password }),
+    const result: any = await postData("/pet-owners/login", {
+      email,
+      password,
     });
 
-    const result = await response.json();
-    if (result.success === false) {
-      return result;
-    } else {
-      const userId = result.data.user.id;
+    if (result.success === true) {
+      const userId = result.data.id;
       await createSession(userId);
     }
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    if (error?.response?.data?.success === false) {
+      return error.response.data;
+    }
   }
 
   redirect("/dashboard");
