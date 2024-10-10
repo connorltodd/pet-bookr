@@ -16,7 +16,7 @@ const config: Config = {
 
           secondary: "#E7E1D9",
           "secondary-focus": "#cbc5be",
-          "secondary-content": "#161827",
+          "secondary-content": "#FFF",
 
           accent: "#67cba0",
           "accent-focus": "#41be88",

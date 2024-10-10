@@ -1,15 +1,19 @@
+import { redirect } from "next/navigation";
+import { getData } from "../lib/apiClient";
 import { verifySession } from "../lib/dal";
-import LogoutButton from "../ui/components/LogoutButton";
+import { User } from "../types";
 
 export default async function Dashboard() {
   const session = await verifySession();
 
   const user_id = session?.userId;
 
-  return (
-    <div>
-      <h1>User ID: {user_id.toString()}</h1>
-      <LogoutButton />
-    </div>
-  );
+  const response: any = await getData(`/pet-owners/${user_id}`);
+  const user = response?.data as User;
+
+  if (!user.postcode) {
+    redirect("/dashboard/onboarding/welcome");
+  } else {
+    redirect("/dashboard/businesses");
+  }
 }
