@@ -19,3 +19,13 @@ export type AddressSuggestionData = {
   address: string;
   url: string;
 };
+
+export type AddressDetails = {
+  id?: string;
+  line_1?: string;
+  line_2?: string;
+  town_or_city?: string;
+  county?: string;
+  postcode?: string;
+  country?: string;
+};

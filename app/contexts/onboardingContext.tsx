@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, createContext, Dispatch, SetStateAction } from "react";
+import { AddressDetails } from "../types";
 
 interface OnboardingData {
-  address: object;
+  address: AddressDetails;
   pets: any[];
 }
 
@@ -15,7 +16,15 @@ interface OnboardingContextType {
 // Provide a default value for the context
 const defaultOnboardingData: OnboardingContextType = {
   onboardingData: {
-    address: {},
+    address: {
+      id: "",
+      line_1: "",
+      line_2: "",
+      town_or_city: "",
+      county: "",
+      postcode: "",
+      country: "",
+    },
     pets: [],
   },
   setOnboardingData: () => {},

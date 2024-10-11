@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   searchAddresses,
   searchAddressesById,
+  searchAddressesByPostcode,
 } from "@/app/actions/address-onboarding";
 import { AddressSuggestionData } from "@/app/types";
 import { OnboardingContext } from "@/app/contexts/onboardingContext";
@@ -22,6 +23,19 @@ export default function AddressOnboardingPage() {
 
   const { onboardingData, setOnboardingData } = useContext(OnboardingContext);
 
+  const getAddressesByPostcode = async (postcode: string) => {
+    const addressesByPostcode = await searchAddressesByPostcode(postcode);
+    setAddressSuggestions(addressesByPostcode as AddressSuggestionData[]);
+  };
+
+  // this is used if the user goes back to the previous page to change their address on onboarding flow
+  useEffect(() => {
+    if (onboardingData?.address?.postcode?.length) {
+      getAddressesByPostcode(onboardingData?.address?.postcode);
+    }
+  }, []);
+
+  // gets suggestions from API and stores them in the state
   useEffect(() => {
     // @ts-ignore
     if (formState?.data.length) {
@@ -30,6 +44,7 @@ export default function AddressOnboardingPage() {
     }
   }, [formState]);
 
+  // Takes the id from the suggestion and returns the full address ready to store in DB
   const getAddressDetailedInfo = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -38,8 +53,10 @@ export default function AddressOnboardingPage() {
     setOnboardingData({
       ...onboardingData,
       address: {
+        id: addressId,
         line_1: detailedAddress.line_1,
         line_2: detailedAddress.line_2,
+        town_or_city: detailedAddress.town_or_city,
         county: detailedAddress.county,
         postcode: detailedAddress.postcode,
         country: detailedAddress.country,
@@ -60,6 +77,11 @@ export default function AddressOnboardingPage() {
             type="text"
             placeholder="CF83 7PP"
             name="address"
+            defaultValue={
+              onboardingData?.address?.postcode?.length
+                ? onboardingData?.address?.postcode
+                : ""
+            }
           />
           <button className="btn btn-outline">Find Address</button>
         </form>
@@ -68,8 +90,13 @@ export default function AddressOnboardingPage() {
           <select
             className="select select-bordered w-full"
             onChange={getAddressDetailedInfo}
+            defaultValue={
+              onboardingData?.address?.id?.length
+                ? onboardingData?.address?.id
+                : "default"
+            }
           >
-            <option selected disabled>
+            <option value={"default"} selected disabled>
               Select your address
             </option>
             {addressSuggestions.map(
@@ -87,7 +114,7 @@ export default function AddressOnboardingPage() {
         {Object.keys(onboardingData.address).length > 1 && (
           <Link
             className="btn btn-primary  min-w-24"
-            href="/dashboard/onboarding/welcome"
+            href="/dashboard/onboarding/pets"
           >
             Next
           </Link>
