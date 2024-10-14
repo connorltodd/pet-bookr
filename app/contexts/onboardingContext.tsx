@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, createContext, Dispatch, SetStateAction } from "react";
+import {
+  useState,
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+} from "react";
 import { AddressDetails } from "../types";
 
 interface OnboardingData {
@@ -34,13 +40,30 @@ export const OnboardingContext = createContext<OnboardingContextType>(
   defaultOnboardingData
 );
 
+const defaultOnboardingObject = {
+  address: {},
+  pets: [],
+};
+
 const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [onboardingData, setOnboardingData] = useState<OnboardingData>({
-    address: {},
-    pets: [],
+  const [onboardingData, setOnboardingData] = useState<OnboardingData>(() => {
+    // getting stored value
+    const onboardingData = localStorage.getItem("onboardingData");
+    let initialValue = defaultOnboardingObject;
+    if (onboardingData) {
+      initialValue = JSON.parse(onboardingData);
+    }
+    return initialValue;
   });
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "onboardingData",
+      JSON.stringify(onboardingData)
+    );
+  }, [onboardingData]);
   return (
     <OnboardingContext.Provider value={{ onboardingData, setOnboardingData }}>
       {children}

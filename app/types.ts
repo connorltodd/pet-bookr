@@ -29,3 +29,13 @@ export type AddressDetails = {
   postcode?: string;
   country?: string;
 };
+
+export type Pet = {
+  id?: number;
+  name: string;
+  weight: number;
+  type: string;
+  fur_type: string;
+  birthday: string;
+  owner_id?: string;
+};
