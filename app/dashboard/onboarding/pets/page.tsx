@@ -60,131 +60,135 @@ export default function PetsOnboardingPage() {
     }
   };
   return (
-    <div className="flex sm:w-[100%] md:w-[500px] min-h-[353px] flex-col p-4">
-      <h1 className="font-bold sm:text-[24px] text-center mb-8">
-        Let's add your pet(s)
-      </h1>
-      {isAddNewPetFormDisplayed ? (
-        <form action={addPet} className="flex gap-4 flex-col mt-6">
-          <div className="space-y-1">
-            <p className="text-md">Name</p>
-            <label
-              htmlFor="pet_name"
-              className="input input-bordered flex items-center gap-2"
-            >
-              <input
-                type="text"
-                name="pet_name"
-                placeholder="Scooby"
-                required
-              />
-            </label>
-          </div>
-          <div className="space-y-1">
-            <p className="text-md">Birthday</p>
-            <label
-              htmlFor="pet_birthday"
-              className="input input-bordered flex items-center gap-2"
-            >
-              <input
-                type="date"
-                name="pet_birthday"
-                max={`${moment().format("YYYY-MM-DD")}`}
-                required
-              />
-            </label>
-          </div>
-          <div className="space-y-1">
-            <p className="text-md">Weight (KG)</p>
-            <label
-              htmlFor="pet_weight"
-              className="input input-bordered flex items-center gap-2"
-            >
-              <input
-                inputMode="decimal"
-                pattern="[0-9]*[.,]?[0-9]*"
-                name="pet_weight"
-                placeholder="18.5"
-                required
-              />
-            </label>
-          </div>
-          <div className="space-y-1">
-            <p className="text-md">Species</p>
-            <label htmlFor="pet_type">
-              <select
-                className="select select-bordered w-full"
-                name="pet_type"
-                defaultValue="default"
-                required
+    <div className="flex sm:w-[100%] md:w-[500px] min-h-[353px] flex-col justify-between p-4">
+      <div>
+        <h1 className="font-bold sm:text-[24px] text-center mb-8">
+          Let's add your pet(s)
+        </h1>
+        {isAddNewPetFormDisplayed ? (
+          <form action={addPet} className="flex gap-4 flex-col mt-6">
+            <div className="space-y-1">
+              <p className="text-md">Name</p>
+              <label
+                htmlFor="pet_name"
+                className="input input-bordered flex items-center gap-2"
               >
-                <option value={"default"} disabled>
-                  Select Species
-                </option>
-                <option value="cat">Cat</option>
-                <option value="dog">Dog</option>
-              </select>
-            </label>
-          </div>
-          <div className="space-y-1">
-            <p className="text-md">Fur Type</p>
-            <label htmlFor="pet_fur_type">
-              <select
-                className="select select-bordered w-full"
-                name="pet_fur_type"
-                defaultValue="default"
-                required
+                <input
+                  type="text"
+                  name="pet_name"
+                  placeholder="Scooby"
+                  required
+                />
+              </label>
+            </div>
+            <div className="space-y-1">
+              <p className="text-md">Birthday</p>
+              <label
+                htmlFor="pet_birthday"
+                className="input input-bordered flex items-center gap-2"
               >
-                <option value={"default"} disabled>
-                  Select Fur Type
-                </option>
-                <option value="long_hair">Long Hair</option>
-                <option value="short_hair">Short Hair</option>
-              </select>
-            </label>
-          </div>
-          <button className="btn btn-primary  min-w-24 max-w-28 m-auto mt-4">
-            Add Pet
-          </button>
-        </form>
-      ) : (
-        <div className="flex space-between flex-col">
-          <div>
-            {onboardingData.pets.length ? (
-              <div className="mb-12">
-                {onboardingData.pets.map((pet: Pet) => (
-                  <div className="flex gap-8 items-center justify-between mb-8 md:pl-8 md:pr-8">
-                    <div className="flex items-center">
-                      <Image
-                        src={pet.type === "dog" ? dogIcon : catIcon}
-                        alt="pet icon"
-                        height={50}
-                        width={50}
-                      />
-                      <p className="capitalize text-xl ml-8">{pet.name}</p>
-                    </div>
-                    <button
-                      onClick={() => deletePetFromOnboarding(pet.id as string)}
-                      className=" bg-red-500 text-white font-bold h-6 w-6 text-sm rounded"
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ) : null}
-            <button
-              onClick={() => setAddNewPetFormDisplay(true)}
-              className="underline min-w-24 max-w-28 m-auto mb-8 block"
-            >
+                <input
+                  type="date"
+                  name="pet_birthday"
+                  max={`${moment().format("YYYY-MM-DD")}`}
+                  required
+                />
+              </label>
+            </div>
+            <div className="space-y-1">
+              <p className="text-md">Weight (KG)</p>
+              <label
+                htmlFor="pet_weight"
+                className="input input-bordered flex items-center gap-2"
+              >
+                <input
+                  inputMode="decimal"
+                  pattern="[0-9]*[.,]?[0-9]*"
+                  name="pet_weight"
+                  placeholder="18.5"
+                  required
+                />
+              </label>
+            </div>
+            <div className="space-y-1">
+              <p className="text-md">Species</p>
+              <label htmlFor="pet_type">
+                <select
+                  className="select select-bordered w-full"
+                  name="pet_type"
+                  defaultValue="default"
+                  required
+                >
+                  <option value={"default"} disabled>
+                    Select Species
+                  </option>
+                  <option value="cat">Cat</option>
+                  <option value="dog">Dog</option>
+                </select>
+              </label>
+            </div>
+            <div className="space-y-1">
+              <p className="text-md">Fur Type</p>
+              <label htmlFor="pet_fur_type">
+                <select
+                  className="select select-bordered w-full"
+                  name="pet_fur_type"
+                  defaultValue="default"
+                  required
+                >
+                  <option value={"default"} disabled>
+                    Select Fur Type
+                  </option>
+                  <option value="long_hair">Long Hair</option>
+                  <option value="short_hair">Short Hair</option>
+                </select>
+              </label>
+            </div>
+            <button className="btn btn-primary  min-w-24 max-w-28 m-auto mt-4">
               Add Pet
             </button>
+          </form>
+        ) : (
+          <div>
+            <div>
+              {onboardingData.pets.length ? (
+                <div className="mb-12">
+                  {onboardingData.pets.map((pet: Pet) => (
+                    <div className="flex gap-8 items-center justify-between mb-8 md:pl-8 md:pr-8">
+                      <div className="flex items-center">
+                        <Image
+                          src={pet.type === "dog" ? dogIcon : catIcon}
+                          alt="pet icon"
+                          height={50}
+                          width={50}
+                        />
+                        <p className="capitalize text-xl ml-8">{pet.name}</p>
+                      </div>
+                      <button
+                        onClick={() =>
+                          deletePetFromOnboarding(pet.id as string)
+                        }
+                        className=" bg-red-500 text-white font-bold h-6 w-6 text-sm rounded"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+              <button
+                onClick={() => setAddNewPetFormDisplay(true)}
+                className="underline min-w-24 max-w-28 m-auto mb-8 block"
+              >
+                Add Pet
+              </button>
+            </div>
           </div>
-
-          <Link
-            href="/"
-            className="btn btn-primary align-middle	min-w-24 max-w-28 m-auto mt-4"
-          >
+        )}
+      </div>
+      {!isAddNewPetFormDisplayed && (
+        <div className="flex justify-center">
+          <Link href="/" className="btn btn-primary min-w-24 max-w-28">
             Next
           </Link>
         </div>
