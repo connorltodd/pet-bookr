@@ -1,9 +1,15 @@
 "use client";
 
 import React, { useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { OnboardingContext } from "@/app/contexts/onboardingContext";
 import { Pet } from "@/app/types";
+import Image from "next/image";
+import Link from "next/link";
+
+import dogIcon from "@/app/assets/images/dog-icon.png";
+import catIcon from "@/app/assets/images/cat-icon.png";
 
 export default function PetsOnboardingPage() {
   const { onboardingData, setOnboardingData } = useContext(OnboardingContext);
@@ -23,6 +29,7 @@ export default function PetsOnboardingPage() {
     const petFurType = formData.get("pet_fur_type") as string;
 
     const newPet: Pet = {
+      id: uuidv4(),
       name: petName,
       weight: petWeight,
       birthday: petBirthday,
@@ -37,9 +44,24 @@ export default function PetsOnboardingPage() {
 
     setAddNewPetFormDisplay(false);
   };
+
+  const deletePetFromOnboarding = (petToDeleteId: string) => {
+    const newPetsArray = [...onboardingData.pets].filter(
+      (pet: Pet) => pet.id !== petToDeleteId
+    );
+
+    setOnboardingData({
+      ...onboardingData,
+      pets: newPetsArray,
+    });
+
+    if (newPetsArray.length === 0) {
+      setAddNewPetFormDisplay(true);
+    }
+  };
   return (
-    <div className="flex justify-between sm:w-[100%] md:w-[500px] min-h-[353px] flex-col p-4">
-      <h1 className="font-bold sm:text-[24px]  text-center">
+    <div className="flex sm:w-[100%] md:w-[500px] min-h-[353px] flex-col p-4">
+      <h1 className="font-bold sm:text-[24px] text-center mb-8">
         Let's add your pet(s)
       </h1>
       {isAddNewPetFormDisplayed ? (
@@ -79,7 +101,8 @@ export default function PetsOnboardingPage() {
               className="input input-bordered flex items-center gap-2"
             >
               <input
-                type="text"
+                inputMode="decimal"
+                pattern="[0-9]*[.,]?[0-9]*"
                 name="pet_weight"
                 placeholder="18.5"
                 required
@@ -125,26 +148,45 @@ export default function PetsOnboardingPage() {
           </button>
         </form>
       ) : (
-        <div>
-          {onboardingData.pets.length ? (
-            <div>
-              {onboardingData.pets.map((pet: Pet) => (
-                <div>
-                  <h1>{pet.type}</h1>
-                  <h1>{pet.name}</h1>
-                  <h1>{pet.weight}</h1>
-                  <h1>{pet.birthday}</h1>
-                  <h1>{pet.fur_type}</h1>
-                </div>
-              ))}
-            </div>
-          ) : null}
-          <button
-            onClick={() => setAddNewPetFormDisplay(true)}
-            className="btn btn-primary  min-w-24 max-w-28 m-auto mt-4 block"
+        <div className="flex space-between flex-col">
+          <div>
+            {onboardingData.pets.length ? (
+              <div className="mb-12">
+                {onboardingData.pets.map((pet: Pet) => (
+                  <div className="flex gap-8 items-center justify-between mb-8 md:pl-8 md:pr-8">
+                    <div className="flex items-center">
+                      <Image
+                        src={pet.type === "dog" ? dogIcon : catIcon}
+                        alt="pet icon"
+                        height={50}
+                        width={50}
+                      />
+                      <p className="capitalize text-xl ml-8">{pet.name}</p>
+                    </div>
+                    <button
+                      onClick={() => deletePetFromOnboarding(pet.id as string)}
+                      className=" bg-red-500 text-white font-bold h-6 w-6 text-sm rounded"
+                    >
+                      X
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            <button
+              onClick={() => setAddNewPetFormDisplay(true)}
+              className="underline min-w-24 max-w-28 m-auto mb-8 block"
+            >
+              Add Pet
+            </button>
+          </div>
+
+          <Link
+            href="/"
+            className="btn btn-primary align-middle	min-w-24 max-w-28 m-auto mt-4"
           >
-            Add Pet
-          </button>
+            Next
+          </Link>
         </div>
       )}
     </div>

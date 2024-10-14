@@ -31,7 +31,7 @@ export type AddressDetails = {
 };
 
 export type Pet = {
-  id?: number;
+  id?: string;
   name: string;
   weight: number;
   type: string;
