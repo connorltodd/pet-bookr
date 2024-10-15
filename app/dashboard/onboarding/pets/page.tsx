@@ -188,7 +188,10 @@ export default function PetsOnboardingPage() {
       </div>
       {!isAddNewPetFormDisplayed && (
         <div className="flex justify-center">
-          <Link href="/" className="btn btn-primary min-w-24 max-w-28">
+          <Link
+            href="/dashboard/onboarding/completion"
+            className="btn btn-primary min-w-24 max-w-28"
+          >
             Next
           </Link>
         </div>
