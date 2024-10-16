@@ -1,3 +1,5 @@
+"use server";
+
 import axios, { AxiosInstance } from "axios";
 import { cookies } from "next/headers";
 
@@ -20,7 +22,7 @@ const axiosClient: AxiosInstance = axios.create({
 
 // Request interceptor to handle things like attaching tokens
 axiosClient.interceptors.request.use(
-  (config) => {
+  (config: any) => {
     // Example: Add Authorization token if available
     const token = cookies().get("session")?.value;
     if (token) {

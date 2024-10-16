@@ -102,10 +102,10 @@ export default function PetsOnboardingPage() {
                 className="input input-bordered flex items-center gap-2"
               >
                 <input
-                  inputMode="decimal"
-                  pattern="[0-9]*[.,]?[0-9]*"
+                  step="0.1"
+                  type="number"
                   name="pet_weight"
-                  placeholder="18.5"
+                  placeholder="10.5"
                   required
                 />
               </label>
@@ -154,7 +154,10 @@ export default function PetsOnboardingPage() {
               {onboardingData.pets.length ? (
                 <div className="mb-12">
                   {onboardingData.pets.map((pet: Pet) => (
-                    <div className="flex gap-8 items-center justify-between mb-8 md:pl-8 md:pr-8">
+                    <div
+                      key={pet.id}
+                      className="flex gap-8 items-center justify-between mb-8 md:pl-8 md:pr-8"
+                    >
                       <div className="flex items-center">
                         <Image
                           src={pet.type === "dog" ? dogIcon : catIcon}

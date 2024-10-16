@@ -96,12 +96,12 @@ export default function AddressOnboardingPage() {
                 : "default"
             }
           >
-            <option value={"default"} selected disabled>
+            <option value={"default"} disabled>
               Select your address
             </option>
             {addressSuggestions.map(
               (addressSuggestion: AddressSuggestionData) => (
-                <option value={addressSuggestion.id}>
+                <option key={addressSuggestion.id} value={addressSuggestion.id}>
                   {addressSuggestion.address}
                 </option>
               )

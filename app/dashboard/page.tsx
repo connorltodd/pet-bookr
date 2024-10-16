@@ -1,12 +1,10 @@
 import { redirect } from "next/navigation";
 import { getData } from "../lib/apiClient";
-import { verifySession } from "../lib/dal";
 import { User } from "../types";
+import { getUserId } from "../lib/getUser";
 
 export default async function Dashboard() {
-  const session = await verifySession();
-
-  const user_id = session?.userId;
+  const user_id = await getUserId();
 
   const response: any = await getData(`/pet-owners/${user_id}`);
   const user = response?.data as User;

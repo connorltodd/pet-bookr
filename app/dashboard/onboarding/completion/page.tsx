@@ -1,24 +1,56 @@
 "use client";
 
-import { OnboardingContext } from "@/app/contexts/onboardingContext";
-import { postData } from "@/app/lib/apiClient";
+import {
+  defaultOnboardingObject,
+  OnboardingContext,
+} from "@/app/contexts/onboardingContext";
 import Link from "next/link";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import dogsSmiling from "@/app/assets/images/smiling-welcome-dogs-photo.png";
+import { updateUser } from "@/app/actions/user";
+import { getUserId } from "@/app/lib/getUser";
+import { createPet } from "@/app/actions/pet";
 
 export default function OnboardingCompletionPage() {
-  const [isOnboardingDataSaving, setOnboardingDataSavingState] = useState(true);
+  const [isOnboardingDataSaving, setOnboardingDataSavingState] =
+    useState(false);
   const { onboardingData, setOnboardingData } = useContext(OnboardingContext);
 
   useEffect(() => {
+    console.log("use effect");
     saveUserOnboardingInfo();
   }, []);
 
   const saveUserOnboardingInfo = async () => {
+    if (
+      !window.localStorage.getItem("onboardingData") ||
+      !onboardingData?.pets?.length ||
+      !onboardingData?.address?.postcode
+    ) {
+      return;
+    }
+    const user_id = await getUserId();
     // loop through the pets array and create each pet
     // add the user id when creating the pet
+
+    for (const petData of onboardingData.pets) {
+      const { id, ...rest } = petData;
+      const pet = await createPet(rest, user_id as string);
+      console.log("Created pet:", pet);
+    }
+
     // update the user to add the new address info
+    const userUpdate: any = await updateUser(
+      onboardingData.address,
+      user_id as string
+    );
+
+    if (userUpdate?.success) {
+      window.localStorage.removeItem("onboardingData");
+      setOnboardingDataSavingState(false);
+      setOnboardingData(defaultOnboardingObject);
+    }
   };
 
   return (

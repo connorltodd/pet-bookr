@@ -20,7 +20,7 @@ interface OnboardingContextType {
 }
 
 // Provide a default value for the context
-const defaultOnboardingData: OnboardingContextType = {
+export const defaultOnboardingData: OnboardingContextType = {
   onboardingData: {
     address: {
       id: "",
@@ -40,7 +40,7 @@ export const OnboardingContext = createContext<OnboardingContextType>(
   defaultOnboardingData
 );
 
-const defaultOnboardingObject = {
+export const defaultOnboardingObject = {
   address: {},
   pets: [],
 };
@@ -48,15 +48,17 @@ const defaultOnboardingObject = {
 const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [onboardingData, setOnboardingData] = useState<OnboardingData>(() => {
-    // getting stored value
-    const onboardingData = localStorage.getItem("onboardingData");
-    let initialValue = defaultOnboardingObject;
-    if (onboardingData) {
-      initialValue = JSON.parse(onboardingData);
+  const [onboardingData, setOnboardingData] = useState<OnboardingData>(
+    defaultOnboardingObject
+  );
+
+  useEffect(() => {
+    const onboardingDataLocalStorage =
+      window.localStorage.getItem("onboardingData");
+    if (onboardingDataLocalStorage) {
+      setOnboardingData(JSON.parse(onboardingDataLocalStorage));
     }
-    return initialValue;
-  });
+  }, []);
 
   useEffect(() => {
     window.localStorage.setItem(
