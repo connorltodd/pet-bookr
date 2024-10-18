@@ -1,11 +1,6 @@
-import Modal from "@/app/ui/components/Modal";
-import Navbar from "@/app/ui/components/Navbar";
-
 export default function Businesses() {
   return (
     <div>
-      <Navbar />
-
       <div className="container m-auto mt-14">
         <form className="flex justify-center items-center gap-6">
           <label
