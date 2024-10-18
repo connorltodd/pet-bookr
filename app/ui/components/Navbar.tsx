@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import PetBookrLogo from "./PetBookrLogo";
 
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -31,7 +32,14 @@ export default function Navbar() {
       </div>
 
       {/* Desktop Menu */}
-      <nav className="lg:flex hidden bg-white" role="navigation">
+      <nav className="lg:flex hidden bg-white py-4 px-8" role="navigation">
+        {/* Logo */}
+        <div>
+          <Link href="/dashboard/businesses">
+            <PetBookrLogo />
+          </Link>
+        </div>
+
         <Link className="text-blue-500 text-2xl" href="/home">
           Home
         </Link>
@@ -43,7 +51,13 @@ export default function Navbar() {
           drawerOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 lg:hidden`}
       >
-        <nav className="bg-white" role="navigation">
+        <nav className="bg-white p-4" role="navigation">
+          <Link href="/dashboard/businesses">
+            <div className="flex justify-center items-center gap-4">
+              <PetBookrLogo height={60} width={60} fontSize="text-3xl" />
+              <h1 className="text-2xl font-semibold">Pet Bookr</h1>
+            </div>
+          </Link>
           <Link className="text-blue-500 text-2xl" href="/home">
             Home
           </Link>

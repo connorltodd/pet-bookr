@@ -6,6 +6,19 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  theme: {
+    extend: {
+      screens: {
+        // Add your custom viewport breakpoints here
+        xs: "480px", // Extra small screen
+        sm: "640px", // Small screen (default Tailwind)
+        md: "768px", // Medium screen (default Tailwind)
+        lg: "1024px", // Large screen (default Tailwind)
+        xl: "1280px", // Extra large screen (default Tailwind)
+        "2xl": "1536px", // 2x Extra large screen (default Tailwind)
+      },
+    },
+  },
   daisyui: {
     themes: [
       {
@@ -52,4 +65,5 @@ const config: Config = {
   },
   plugins: [require("daisyui")],
 };
+
 export default config;
