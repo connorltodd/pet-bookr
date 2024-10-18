@@ -2,6 +2,7 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import { OnboardingContext } from "@/app/contexts/onboardingContext";
 import { Pet } from "@/app/types";
@@ -10,6 +11,7 @@ import Link from "next/link";
 
 import dogIcon from "@/app/assets/images/dog-icon.png";
 import catIcon from "@/app/assets/images/cat-icon.png";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function PetsOnboardingPage() {
   const { onboardingData, setOnboardingData } = useContext(OnboardingContext);
@@ -171,9 +173,11 @@ export default function PetsOnboardingPage() {
                         onClick={() =>
                           deletePetFromOnboarding(pet.id as string)
                         }
-                        className=" bg-red-500 text-white font-bold h-6 w-6 text-sm rounded"
                       >
-                        X
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          className="fas fa-trash h-4 w-4"
+                        />
                       </button>
                     </div>
                   ))}

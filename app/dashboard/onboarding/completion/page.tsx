@@ -75,9 +75,9 @@ export default function OnboardingCompletionPage() {
             Your account is ready to go!
           </h1>
           <div className="flex justify-center mt-4">
-            <Link href="/dashboard" className="btn btn-primary min-w-24">
+            <a href="/" className="btn btn-primary min-w-24">
               View Groomers
-            </Link>
+            </a>
           </div>
         </div>
       )}

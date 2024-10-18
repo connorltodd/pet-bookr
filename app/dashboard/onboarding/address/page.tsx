@@ -83,7 +83,9 @@ export default function AddressOnboardingPage() {
                 : ""
             }
           />
-          <button className="btn btn-outline">Find Address</button>
+          <button className="btn btn-outline border-primary text-primary hover:btn-primary hover:text-white">
+            Find Address
+          </button>
         </form>
 
         {addressSuggestions.length ? (
