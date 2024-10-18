@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useFormState } from "react-dom";
 import { login } from "@/app/lib/auth";
 import FormButton from "@/app/ui/components/FormButton";
-import Logo from "../ui/components/PetBookrLogo";
 import PetBookrLogo from "../ui/components/PetBookrLogo";
 
 const initialState = {

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import PetBookrLogo from "./PetBookrLogo";
+import LogoutButton from "./LogoutButton";
 
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -20,29 +21,38 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <div>
+    <div className="">
       {/* Hamburger Icon */}
-      <div className="flex justify-end lg:hidden pt-4 pb-0 md:p-12">
+      <div className="flex justify-end lg:hidden pt-5 pr-7 pb-0 md:p-12">
         <button
           onClick={toggleDrawer}
-          className="text-white focus:outline-none focus:text-white"
+          className="text-black focus:outline-none focus:text-black"
         >
           <FontAwesomeIcon icon={faBars} className="fas fa-bars h-10 w-10" />
         </button>
       </div>
 
       {/* Desktop Menu */}
-      <nav className="lg:flex hidden bg-white py-4 px-8" role="navigation">
+      <nav
+        className="lg:flex hidden justify-between items-center py-4 px-8"
+        role="navigation"
+      >
         {/* Logo */}
-        <div>
-          <Link href="/dashboard/businesses">
-            <PetBookrLogo />
-          </Link>
-        </div>
-
-        <Link className="text-blue-500 text-2xl" href="/home">
-          Home
+        <Link href="/dashboard/businesses">
+          <PetBookrLogo height={60} width={60} fontSize="text-xl" />
         </Link>
+        <div className="flex gap-12 items-center">
+          <Link className="text-md" href="/dashboard/businesses">
+            Find a Groomer
+          </Link>
+          <Link className="text-md" href="/dashboard/bookings">
+            Bookings
+          </Link>
+          <Link className="text-md" href="/dashboard/profile">
+            Profile
+          </Link>
+          <LogoutButton />
+        </div>
       </nav>
 
       {/* Mobile Menu */}
@@ -54,13 +64,21 @@ export default function Navbar() {
         <nav className="bg-white p-4" role="navigation">
           <Link href="/dashboard/businesses">
             <div className="flex justify-center items-center gap-4">
-              <PetBookrLogo height={60} width={60} fontSize="text-3xl" />
-              <h1 className="text-2xl font-semibold">Pet Bookr</h1>
+              <PetBookrLogo height={60} width={60} fontSize="text-xl" />
             </div>
           </Link>
-          <Link className="text-blue-500 text-2xl" href="/home">
-            Home
-          </Link>
+          <div className="w-[170px] m-auto flex flex-col gap-8 mt-8">
+            <Link className="text-md" href="/dashboard/businesses">
+              Find a Groomer
+            </Link>
+            <Link className="text-md" href="/dashboard/bookings">
+              Bookings
+            </Link>
+            <Link className="text-md" href="/dashboard/profile">
+              Profile
+            </Link>
+            <LogoutButton />
+          </div>
         </nav>
       </div>
 
