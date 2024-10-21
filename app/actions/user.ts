@@ -1,6 +1,7 @@
 "use server";
 
-import { putData } from "../lib/apiClient";
+import { getData, putData } from "../lib/apiClient";
+import { getUserId } from "../lib/getUser";
 import { AddressDetails } from "../types";
 
 export async function updateUser(address: AddressDetails, userId: string) {
@@ -15,6 +16,17 @@ export async function updateUser(address: AddressDetails, userId: string) {
     });
 
     return { success: true, data: userUpdate.data };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getUser() {
+  const user_id = await getUserId();
+
+  try {
+    const user = await getData(`pet-owners/${user_id}`);
+    return user.data;
   } catch (error) {
     console.error(error);
   }

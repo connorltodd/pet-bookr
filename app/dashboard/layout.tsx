@@ -1,4 +1,7 @@
+"use client";
+
 import Navbar from "@/app/ui/components/Navbar";
+import { UserProvider } from "../contexts/userContext";
 
 export default function RootLayout({
   children,
@@ -7,8 +10,10 @@ export default function RootLayout({
 }>) {
   return (
     <div className="max-w-[1440px] m-auto">
-      <Navbar />
-      {children}
+      <UserProvider>
+        <Navbar />
+        {children}
+      </UserProvider>
     </div>
   );
 }
