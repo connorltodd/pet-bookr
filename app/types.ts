@@ -1,10 +1,11 @@
 export type User = {
-  id: number;
+  id?: number;
   email: string;
   first_name: string;
   last_name: string;
-  street_address?: string;
-  city?: string;
+  address_line_1?: string;
+  address_line_2?: string;
+  town_or_city?: string;
   county?: string;
   postcode?: string;
   country?: string;
@@ -33,9 +34,9 @@ export type AddressDetails = {
 export type Pet = {
   id?: string;
   name: string;
-  weight: number;
+  weight?: number;
   type: string;
-  fur_type: string;
-  birthday: string;
+  fur_type?: string;
+  birthday?: string;
   owner_id?: string;
 };

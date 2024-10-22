@@ -6,26 +6,9 @@ import React, {
   useEffect,
 } from "react";
 import { getUser } from "../actions/user";
+import { Pet, User } from "../types";
 
 // Define the types for the user and pets
-type User = {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  address_line_1: string;
-  address_line_2?: string;
-  town_or_city?: string;
-  county?: string;
-  postcode: string;
-  country: string;
-};
-
-interface Pet {
-  id: number;
-  name: string;
-  type: string;
-}
 
 interface UserContextType {
   user: User | null;

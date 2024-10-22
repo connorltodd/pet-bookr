@@ -1,6 +1,6 @@
 "use client";
 
-import Address from "@/app/ui/profile/Address";
+import AddressDetails from "@/app/ui/profile/Address";
 import { usePathname } from "next/navigation";
 import Profile from "../page";
 import PersonalDetails from "@/app/ui/profile/PersonalDetails";
@@ -12,11 +12,9 @@ export default function ProfileDetails() {
   // Assuming the slug is the last segment of the pathname
   const slug = pathname.split("/").filter(Boolean).pop();
 
-  console.log(slug);
-
   switch (slug) {
     case "address":
-      return <Address />;
+      return <AddressDetails />;
     case "personal-details":
       return <PersonalDetails />;
     case "pets":

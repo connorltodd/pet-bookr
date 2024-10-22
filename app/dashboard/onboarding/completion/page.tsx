@@ -8,7 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import dogsSmiling from "@/app/assets/images/smiling-welcome-dogs-photo.png";
-import { updateUser } from "@/app/actions/user";
+import { updateUserAddress } from "@/app/actions/user";
 import { getUserId } from "@/app/lib/getUser";
 import { createPet } from "@/app/actions/pet";
 
@@ -41,7 +41,7 @@ export default function OnboardingCompletionPage() {
     }
 
     // update the user to add the new address info
-    const userUpdate: any = await updateUser(
+    const userUpdate: any = await updateUserAddress(
       onboardingData.address,
       user_id as string
     );
