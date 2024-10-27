@@ -12,7 +12,7 @@ import dogIcon from "@/app/assets/images/dog-icon.png";
 import catIcon from "@/app/assets/images/cat-icon.png";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import { createPet, deletePet } from "@/app/actions/pet";
+import { createPet, deletePet, editPet } from "@/app/actions/pet";
 import Modal from "../components/Modal";
 
 export default function PetsDetails() {
@@ -27,7 +27,7 @@ export default function PetsDetails() {
     const petType = formData.get("pet_type") as string;
     const petFurType = formData.get("pet_fur_type") as string;
 
-    const petToCreate: Pet = {
+    const petData: Pet = {
       name: petName,
       weight: petWeight,
       birthday: petBirthday,
@@ -36,7 +36,7 @@ export default function PetsDetails() {
     };
     if (formType === "create") {
       if (user) {
-        let newPet: unknown = await createPet(petToCreate, user.id as number);
+        let newPet: unknown = await createPet(petData, user.id as number);
 
         if (
           newPet &&
@@ -48,13 +48,33 @@ export default function PetsDetails() {
           setFormDisplay(false);
         }
       }
-    }
-    {
-      editPet(formData);
+    } else if (formType === "edit") {
+      const petId = formData.get("pet_id") as string;
+      petData.id = petId;
+
+      let editedPet: unknown = await editPet(petData);
+      // replace the new returned data for the old data in the pets array
+      if (
+        editedPet &&
+        typeof editedPet === "object" &&
+        "data" in editedPet &&
+        typeof (editedPet as any).data === "object"
+      ) {
+        const updatedPets = [...pets].map((pet: Pet) =>
+          Number(pet.id) === Number(petId)
+            ? { ...(editedPet.data as Pet) }
+            : pet
+        );
+        setPets(updatedPets);
+        setPetToEdit(null);
+        setFormDisplay(false);
+      }
     }
   };
 
   const [petToDeleteInfo, setPetToDelete] = useState<Pet | null>();
+  const [petToEditInfo, setPetToEdit] = useState<Pet | null>();
+
   const [isToPetDeleteModalDisplayed, setPetDeleteModalDisplay] =
     useState(false);
 
@@ -63,34 +83,23 @@ export default function PetsDetails() {
     setPetDeleteModalDisplay(true);
   };
 
+  const editPetHandler = (petToEdit: Pet) => {
+    setPetToEdit(petToEdit);
+    setFormType("edit");
+    setFormDisplay(true);
+  };
+
   const deletePetHandler = async (petId: string) => {
     const petToDelete: { success: boolean } = await deletePet(petId);
 
     if (petToDelete.success) {
       const newPets = [...pets].filter((pet: Pet) => pet.id !== petId);
       setPets(newPets);
+      setPetToDelete(null);
       setPetDeleteModalDisplay(false);
     }
   };
 
-  const editPet = async (formData: FormData) => {
-    // const first_name = formData.get("first_name") as string;
-    // const last_name = formData.get("last_name") as string;
-    // const email = formData.get("email") as string;
-    // if (user?.id !== undefined) {
-    //   const updatedUser: User | undefined = await updateUser(
-    //     { first_name, last_name, email },
-    //     user.id as number
-    //   );
-    // Ensure updatedUser is not undefined before calling setUser
-    // if (updatedUser) {
-    //   setUser(updatedUser); // updatedUser is safely of type User here
-    //   setFormDisplay(false);
-    // } else {
-    //   console.error("Failed to update user");
-    // }
-    // }
-  };
   return (
     <div className="w-90 max-w-[550px] m-auto mt-10 px-5">
       {isToPetDeleteModalDisplayed && petToDeleteInfo !== null && (
@@ -151,7 +160,7 @@ export default function PetsDetails() {
                       <p className="capitalize text-xl ml-8">{pet.name}</p>
                     </div>
                     <div className="flex justify-center items-center gap-6">
-                      <button onClick={() => editPet(pet.id as any)}>
+                      <button onClick={() => editPetHandler(pet)}>
                         <FontAwesomeIcon
                           icon={faEdit}
                           className="fas fa-edit h-4 w-4"
@@ -171,6 +180,7 @@ export default function PetsDetails() {
             <div>
               <button
                 onClick={() => {
+                  setFormType("create");
                   setFormDisplay(true);
                 }}
                 className="text-md underline"
@@ -183,6 +193,15 @@ export default function PetsDetails() {
       ) : (
         <div className="bg-base-100 rounded-box shadow-xl p-8">
           <form action={formHandler} className="form-control flex gap-6">
+            {petToEditInfo?.id && (
+              <input
+                type="text"
+                name="pet_id"
+                defaultValue={petToEditInfo?.id || ""}
+                required
+                hidden
+              />
+            )}
             <div className="space-y-1">
               <p className="text-md">Name</p>
               <label
@@ -193,6 +212,7 @@ export default function PetsDetails() {
                   type="text"
                   name="pet_name"
                   placeholder="Scooby"
+                  defaultValue={petToEditInfo?.name || ""}
                   required
                 />
               </label>
@@ -207,6 +227,9 @@ export default function PetsDetails() {
                   type="date"
                   name="pet_birthday"
                   max={`${moment().format("YYYY-MM-DD")}`}
+                  defaultValue={
+                    moment(petToEditInfo?.birthday).format("YYYY-MM-DD") || ""
+                  }
                   required
                 />
               </label>
@@ -222,6 +245,7 @@ export default function PetsDetails() {
                   type="number"
                   name="pet_weight"
                   placeholder="10.5"
+                  defaultValue={petToEditInfo?.weight || ""}
                   required
                 />
               </label>
@@ -232,7 +256,7 @@ export default function PetsDetails() {
                 <select
                   className="select select-bordered w-full"
                   name="pet_type"
-                  defaultValue="default"
+                  defaultValue={petToEditInfo?.type || "default"}
                   required
                 >
                   <option value={"default"} disabled>
@@ -249,7 +273,7 @@ export default function PetsDetails() {
                 <select
                   className="select select-bordered w-full"
                   name="pet_fur_type"
-                  defaultValue="default"
+                  defaultValue={petToEditInfo?.fur_type || "default"}
                   required
                 >
                   <option value={"default"} disabled>
