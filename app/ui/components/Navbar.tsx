@@ -28,7 +28,7 @@ export default function Navbar() {
           onClick={toggleDrawer}
           className="text-black focus:outline-none focus:text-black"
         >
-          <FontAwesomeIcon icon={faBars} className="fas fa-bars h-10 w-10" />
+          <FontAwesomeIcon icon={faBars} className="fas fa-bars h-7 w-7" />
         </button>
       </div>
 
