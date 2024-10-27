@@ -1,24 +1,26 @@
 "use client";
 
-// import { updateUser } from "@/app/actions/user";
-import { useUserContext } from "@/app/contexts/userContext";
-import { Pet } from "@/app/types";
-import { faArrowLeft, faEdit } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import moment from "moment";
 import { useState } from "react";
+import { useUserContext } from "@/app/contexts/userContext";
+import { createPet, deletePet, editPet } from "@/app/actions/pet";
+import { Pet } from "@/app/types";
+import Modal from "../components/Modal";
+
+import { faArrowLeft, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dogIcon from "@/app/assets/images/dog-icon.png";
 import catIcon from "@/app/assets/images/cat-icon.png";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import moment from "moment";
-import { createPet, deletePet, editPet } from "@/app/actions/pet";
-import Modal from "../components/Modal";
 
 export default function PetsDetails() {
   const { pets, setPets, user } = useUserContext();
   const [isFormDisplayed, setFormDisplay] = useState(false);
   const [formType, setFormType] = useState("create");
+  const [petToDeleteInfo, setPetToDelete] = useState<Pet | null>();
+  const [petToEditInfo, setPetToEdit] = useState<Pet | null>();
 
   const formHandler = async (formData: FormData) => {
     const petName = formData.get("pet_name") as string;
@@ -71,9 +73,6 @@ export default function PetsDetails() {
       }
     }
   };
-
-  const [petToDeleteInfo, setPetToDelete] = useState<Pet | null>();
-  const [petToEditInfo, setPetToEdit] = useState<Pet | null>();
 
   const [isToPetDeleteModalDisplayed, setPetDeleteModalDisplay] =
     useState(false);
