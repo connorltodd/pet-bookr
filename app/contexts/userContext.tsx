@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { getUser } from "../actions/user";
 import { Pet, User } from "../types";
+import { getUserPets } from "../actions/pet";
 
 // Define the types for the user and pets
 
@@ -30,8 +31,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [pets, setPets] = useState<Pet[]>([]);
 
   const getUserDetails = async () => {
-    const user = await getUser();
-    setUser(user as any);
+    const fetchedUser: User | undefined = await getUser();
+    setUser(fetchedUser as User);
+    if (fetchedUser) {
+      const userPets: Pet[] | undefined = await getUserPets(
+        fetchedUser.id as number
+      );
+      if (userPets) setPets(userPets as Pet[]);
+    }
   };
 
   useEffect(() => {

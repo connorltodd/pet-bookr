@@ -60,12 +60,22 @@ export async function updateUser(
   }
 }
 
-export async function getUser() {
+export async function getUser(): Promise<User | undefined> {
   const user_id = await getUserId();
 
   try {
     const user = await getData(`pet-owners/${user_id}`);
-    return user.data;
+
+    if (
+      user &&
+      typeof user === "object" &&
+      "data" in user &&
+      typeof (user as any).data === "object"
+    ) {
+      return (user as { data: User }).data;
+    } else {
+      return undefined;
+    }
   } catch (error) {
     console.error(error);
   }

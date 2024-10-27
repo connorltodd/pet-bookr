@@ -36,8 +36,7 @@ export default function OnboardingCompletionPage() {
 
     for (const petData of onboardingData.pets) {
       const { id, ...rest } = petData;
-      const pet = await createPet(rest, user_id as string);
-      console.log("Created pet:", pet);
+      await createPet(rest, user_id as string);
     }
 
     // update the user to add the new address info
