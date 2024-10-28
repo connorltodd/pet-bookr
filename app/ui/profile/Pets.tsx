@@ -38,6 +38,7 @@ export default function PetsDetails() {
     };
     if (formType === "create") {
       if (user) {
+        // eslint-disable-next-line
         let newPet: unknown = await createPet(petData, user.id as number);
 
         if (
@@ -54,6 +55,7 @@ export default function PetsDetails() {
       const petId = formData.get("pet_id") as string;
       petData.id = petId;
 
+      // eslint-disable-next-line
       let editedPet: unknown = await editPet(petData);
       // replace the new returned data for the old data in the pets array
       if (

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Welcome to Pet Bookr",
 };
 
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"], // or add more subsets like 'latin-ext' if needed
