@@ -63,7 +63,7 @@ export default function Businesses() {
             <h1 className="text-xl text-center xl:text-left font-bold">
               There are 3 Groomer Shops Nearby:
             </h1>
-            <div className="mt-8 flex flex-wrap gap-8 items-center justify-center md:justify-start pb-12">
+            <div className="mt-8 flex flex-wrap gap-8 items-center justify-center xl:justify-start pb-12">
               {/* Business Card */}
               {businesses.map((business: Business) => (
                 <div
