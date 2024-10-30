@@ -40,3 +40,24 @@ export type Pet = {
   birthday?: string;
   owner_id?: string;
 };
+
+export type Business = {
+  id?: string;
+  name: string;
+  business_type?: string;
+  address_line_1: string;
+  address_line_2: string;
+  town_or_city: string;
+  county: string;
+  postcode: string;
+  country: string;
+  description?: string;
+  monday_operating_hours?: string;
+  tuesday_operating_hours?: string;
+  wednesday_operating_hours?: string;
+  thursday_operating_hours?: string;
+  friday_operating_hours?: string;
+  saturday_operating_hours?: string;
+  sunday_operating_hours?: string;
+  header_image: string;
+};

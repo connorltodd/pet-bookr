@@ -23,7 +23,12 @@ export default function Navbar() {
   return (
     <div className="">
       {/* Hamburger Icon */}
-      <div className="flex justify-end lg:hidden pt-5 pr-7 pb-0 md:p-12">
+      <div className="flex justify-between items-center lg:hidden pt-5 px-7 pb-0 md:p-12">
+        <Link href="/dashboard/businesses">
+          <div className="flex justify-center items-center gap-4">
+            <PetBookrLogo height={40} width={40} fontSize="text-xl" />
+          </div>
+        </Link>
         <button
           onClick={toggleDrawer}
           className="text-black focus:outline-none focus:text-black"
