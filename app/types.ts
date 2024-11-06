@@ -61,3 +61,16 @@ export type Business = {
   sunday_operating_hours?: string;
   header_image: string;
 };
+
+export type PortfolioPhoto = {
+  groomer_business_id: number;
+  id: number;
+  photo_url: string;
+};
+
+// TODO: correctly type groomerServices
+export type BusinessDetails = {
+  business: Business | null;
+  portfolioPhotos: PortfolioPhoto[];
+  groomerServices: [];
+};

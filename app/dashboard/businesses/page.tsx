@@ -58,7 +58,7 @@ export default function Businesses() {
             {businesses.length ? (
               <div className="mt-8 flex flex-wrap gap-8 items-center justify-center xl:justify-start pb-12">
                 {businesses.map((business: Business) => (
-                  <BusinessCard {...business} />
+                  <BusinessCard key={business?.id} {...business} />
                 ))}
               </div>
             ) : searchTermText !== "" ? (

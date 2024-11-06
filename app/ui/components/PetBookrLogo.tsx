@@ -12,7 +12,13 @@ export default function PetBookrLogo({
 }) {
   return (
     <div className="flex justify-center items-center gap-4">
-      <Image src={petBookrLogo} height={height} width={width} alt="pet bookr" />
+      <Image
+        priority
+        src={petBookrLogo}
+        height={height}
+        width={width}
+        alt="pet bookr"
+      />
       <h1 className={`${fontSize} font-semibold`}>Pet Bookr</h1>
     </div>
   );
