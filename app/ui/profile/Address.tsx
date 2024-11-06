@@ -3,7 +3,7 @@
 import { updateUser, updateUserAddress } from "@/app/actions/user";
 import { useUserContext } from "@/app/contexts/userContext";
 import { User } from "@/app/types";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useState } from "react";
@@ -67,9 +67,9 @@ export default function AddressDetails() {
           </div>
           <button
             onClick={() => setEditingMode(true)}
-            className="btn btn-primary w-[80px] absolute right-5 top-5"
+            className="absolute right-7 top-7"
           >
-            Edit
+            <FontAwesomeIcon icon={faEdit} className="fas fa-edit h-5 w-5" />
           </button>
         </div>
       ) : (
@@ -157,7 +157,7 @@ export default function AddressDetails() {
             </div>
             <div className="mt-3 flex items-center gap-4 justify-end">
               <button
-                className="block btn btn-outline border-primary text-primary"
+                className="block btn btn-outline border-primary text-primary hover:btn-primary hover:text-white"
                 type="button"
                 onClick={() => setEditingMode(false)}
               >

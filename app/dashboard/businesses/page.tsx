@@ -62,7 +62,7 @@ export default function Businesses() {
                 ))}
               </div>
             ) : searchTermText !== "" ? (
-              <h1 className="text-xl text-center xl:text-left font-bold capitalize">
+              <h1 className="text-xl text-center xl:text-left font-bold">
                 No Groomers were found for the search: {searchTermText}
               </h1>
             ) : null}
