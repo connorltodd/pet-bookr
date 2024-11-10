@@ -11,7 +11,7 @@ export async function createPet(pet: Pet, ownerId: string | number) {
   }
 }
 
-export async function editPet(pet: Pet) {
+export async function editPet(pet: any) {
   try {
     const petCreated = await putData(`/pets/${pet.id}`, {
       ...pet,

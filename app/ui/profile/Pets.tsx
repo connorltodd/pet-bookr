@@ -48,7 +48,7 @@ export default function PetsDetails() {
   };
 
   const fetchLatestPets = async () => {
-    const userPets: Pet[] | undefined = await getUserPets(user?.id as number);
+    const userPets: any = await getUserPets(user?.id as number);
     if (userPets) {
       setPets(userPets as any);
     } else {
@@ -71,6 +71,7 @@ export default function PetsDetails() {
       birthday: petBirthday,
       dog_breed_id: dogBreedId,
     };
+
     if (formType === "create") {
       if (user) {
         // eslint-disable-next-line
@@ -87,27 +88,18 @@ export default function PetsDetails() {
         }
       }
     } else if (formType === "edit") {
+      if (petData.dog_breed_id === 0) {
+        petData.dog_breed_id = petToEditInfo?.Dog_Breed?.id;
+      }
       const petId = formData.get("pet_id") as string;
       petData.id = petId;
 
       // eslint-disable-next-line
       let editedPet: unknown = await editPet(petData);
       // replace the new returned data for the old data in the pets array
-      if (
-        editedPet &&
-        typeof editedPet === "object" &&
-        "data" in editedPet &&
-        typeof (editedPet as any).data === "object"
-      ) {
-        const updatedPets = [...pets].map((pet: Pet) =>
-          Number(pet.id) === Number(petId)
-            ? { ...(editedPet.data as Pet) }
-            : pet
-        );
-        setPets(updatedPets);
-        setPetToEdit(null);
-        setFormDisplay(false);
-      }
+      fetchLatestPets();
+      setPetToEdit(null);
+      setFormDisplay(false);
     }
 
     // Clearing dog search results
@@ -207,7 +199,7 @@ export default function PetsDetails() {
                       </div>
                     </div>
                     <div className="flex justify-center items-center gap-6">
-                      <button onClick={() => editPetHandler(object?.Pet?.id)}>
+                      <button onClick={() => editPetHandler(object)}>
                         <FontAwesomeIcon
                           icon={faEdit}
                           className="fas fa-edit h-4 w-4"
@@ -244,7 +236,7 @@ export default function PetsDetails() {
               <input
                 type="text"
                 name="pet_id"
-                defaultValue={petToEditInfo?.id || ""}
+                defaultValue={petToEditInfo?.Pet?.id || ""}
                 required
                 hidden
               />
@@ -264,7 +256,6 @@ export default function PetsDetails() {
                 />
               </label>
             </div>
-            {/* TODO: show the dog breed */}
             <div className="space-y-1">
               <p className="text-md">Start typing Breed</p>
               <label
@@ -275,27 +266,34 @@ export default function PetsDetails() {
                   type="text"
                   name="pet_breed_search"
                   placeholder="Border Collie..."
+                  defaultValue={petToEditInfo?.Dog_Breed?.breed || ""}
                   onChange={handleChange}
                 />
               </label>
             </div>
-            {dogBreedResults.length ? (
+            {dogBreedResults.length || petToEditInfo?.Dog_Breed?.id ? (
               <div className="space-y-1">
                 <label htmlFor="dog_breed_id">
                   <select
                     className="select select-bordered w-full"
                     name="dog_breed_id"
-                    defaultValue="default"
                     required
+                    defaultValue={petToEditInfo?.Dog_Breed.id || ""}
                   >
                     <option value={"default"} disabled>
                       Select Your Dog Breed
                     </option>
-                    {dogBreedResults.map((breed: DogBreed) => (
-                      <option
-                        value={breed.id}
-                      >{`${breed.breed} ${breed.hair_type}`}</option>
-                    ))}
+                    {!dogBreedResults.length && petToEditInfo?.Dog_Breed?.id ? (
+                      <option value={petToEditInfo?.Dog_Breed?.id} disabled>
+                        {`${petToEditInfo?.Dog_Breed?.breed} ${petToEditInfo?.Dog_Breed?.hair_type}`}
+                      </option>
+                    ) : (
+                      dogBreedResults.map((breed: DogBreed) => (
+                        <option
+                          value={breed.id}
+                        >{`${breed.breed} ${breed.hair_type}`}</option>
+                      ))
+                    )}
                   </select>
                 </label>
               </div>
@@ -325,7 +323,13 @@ export default function PetsDetails() {
                 <select
                   className="select select-bordered w-full"
                   name="pet_neutered"
-                  defaultValue={petToEditInfo?.Pet?.neutered || "default"}
+                  defaultValue={
+                    (petToEditInfo?.Pet?.neutered === true &&
+                      "pet_neutered_true") ||
+                    (petToEditInfo?.Pet?.neutered === false &&
+                      "pet_neutered_false") ||
+                    "default"
+                  }
                   required
                 >
                   <option value={"default"} disabled>
@@ -357,7 +361,10 @@ export default function PetsDetails() {
               <button
                 className="block btn btn-outline border-primary text-primary"
                 type="button"
-                onClick={() => setFormDisplay(false)}
+                onClick={() => {
+                  setFormDisplay(false);
+                  setPetToEdit(null);
+                }}
               >
                 Cancel
               </button>

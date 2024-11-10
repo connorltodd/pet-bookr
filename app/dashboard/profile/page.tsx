@@ -45,13 +45,6 @@ export default function Profile() {
               className="fas fa-arrow-right h-4 w-4"
             />
           </Link>
-          <button className="size-full bg-base-100 rounded-box shadow-xl h-[50px] flex justify-between items-center px-6">
-            <p>Manage Payment Methods</p>
-            <FontAwesomeIcon
-              icon={faArrowRight}
-              className="fas fa-arrow-right h-4 w-4"
-            />
-          </button>
         </div>
       </div>
     </div>
