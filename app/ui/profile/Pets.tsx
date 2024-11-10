@@ -359,7 +359,7 @@ export default function PetsDetails() {
             </div>
             <div className="mt-3 flex items-center gap-4 justify-end">
               <button
-                className="block btn btn-outline border-primary text-primary"
+                className="block btn btn-outline border-primary text-primary hover:btn-primary hover:text-white"
                 type="button"
                 onClick={() => {
                   setFormDisplay(false);
