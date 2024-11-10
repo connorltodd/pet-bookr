@@ -62,6 +62,22 @@ export default function Signup() {
             </label>
           </div>
           <div className="space-y-0.5">
+            <p className="text-sm">Phone Number</p>
+            <label
+              htmlFor="phone_number"
+              className="input input-bordered flex items-center gap-2"
+            >
+              <input
+                className="grow"
+                type="number"
+                name="phone_number"
+                id="phone_number"
+                placeholder="0712349560"
+                required
+              />
+            </label>
+          </div>
+          <div className="space-y-0.5">
             <p className="text-sm">Email</p>
             <label
               htmlFor="email"

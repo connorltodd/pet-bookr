@@ -3,10 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUserContext } from "@/app/contexts/userContext";
-import { createPet, deletePet, editPet } from "@/app/actions/pet";
-import { Pet } from "@/app/types";
+import { createPet, deletePet, editPet, getUserPets } from "@/app/actions/pet";
+import { DogBreed, Pet } from "@/app/types";
 import Modal from "../components/Modal";
 
 import { faArrowLeft, faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -14,27 +14,62 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dogIcon from "@/app/assets/images/dog-icon.png";
 import catIcon from "@/app/assets/images/cat-icon.png";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { searchDogBreeds } from "@/app/actions/dog-breed";
 
 export default function PetsDetails() {
   const { pets, setPets, user } = useUserContext();
   const [isFormDisplayed, setFormDisplay] = useState(false);
   const [formType, setFormType] = useState("create");
   const [petToDeleteInfo, setPetToDelete] = useState<Pet | null>();
-  const [petToEditInfo, setPetToEdit] = useState<Pet | null>();
+  // TODO: update the type here
+  const [petToEditInfo, setPetToEdit] = useState<any | null>();
+  const [dogBreedResults, setDogBreedResults] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // useEffect to delay the search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchTerm) {
+        dogBreedSearch(searchTerm);
+      }
+    }, 2000);
+
+    // Clear the timeout if searchTerm changes before 2 seconds
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const dogBreedSearch = async (breedSearchValue: string) => {
+    const response = await searchDogBreeds(breedSearchValue);
+    setDogBreedResults(response as any);
+  };
+
+  const fetchLatestPets = async () => {
+    const userPets: Pet[] | undefined = await getUserPets(user?.id as number);
+    if (userPets) {
+      setPets(userPets as any);
+    } else {
+      setPets([]);
+    }
+  };
 
   const formHandler = async (formData: FormData) => {
     const petName = formData.get("pet_name") as string;
+    const petSex = formData.get("pet_sex") as string;
+    const petNeutered = formData.get("pet_neutered") as string;
     const petBirthday = formData.get("pet_birthday") as string;
-    const petWeight = Number(formData.get("pet_weight")) as number;
-    const petType = formData.get("pet_type") as string;
-    const petFurType = formData.get("pet_fur_type") as string;
+    const dogBreedId = Number(formData.get("dog_breed_id")) as number;
 
     const petData: Pet = {
       name: petName,
-      weight: petWeight,
+      sex: petSex,
+      neutered: petNeutered === "pet_neutered_true" ? true : false,
+      type: "dog",
       birthday: petBirthday,
-      fur_type: petFurType,
-      type: petType,
+      dog_breed_id: dogBreedId,
     };
     if (formType === "create") {
       if (user) {
@@ -47,7 +82,7 @@ export default function PetsDetails() {
           "data" in newPet &&
           typeof (newPet as any).data === "object"
         ) {
-          setPets([...pets, newPet.data as Pet]);
+          fetchLatestPets();
           setFormDisplay(false);
         }
       }
@@ -74,6 +109,10 @@ export default function PetsDetails() {
         setFormDisplay(false);
       }
     }
+
+    // Clearing dog search results
+    setSearchTerm("");
+    setDogBreedResults([]);
   };
 
   const [isToPetDeleteModalDisplayed, setPetDeleteModalDisplay] =
@@ -94,8 +133,7 @@ export default function PetsDetails() {
     const petToDelete: { success: boolean } = await deletePet(petId);
 
     if (petToDelete.success) {
-      const newPets = [...pets].filter((pet: Pet) => pet.id !== petId);
-      setPets(newPets);
+      fetchLatestPets();
       setPetToDelete(null);
       setPetDeleteModalDisplay(false);
     }
@@ -146,28 +184,36 @@ export default function PetsDetails() {
           <div className="flex flex-col justify-between items-center">
             {pets.length ? (
               <div className="mb-12">
-                {pets.map((pet: Pet) => (
+                {pets.map((object: any) => (
                   <div
-                    key={pet.id}
+                    key={object?.Pet?.id}
                     className="flex gap-8 items-center justify-between mb-8 md:pl-8 md:pr-8"
                   >
                     <div className="flex items-center">
                       <Image
-                        src={pet.type === "dog" ? dogIcon : catIcon}
+                        src={dogIcon}
                         alt="pet icon"
                         height={50}
                         width={50}
                       />
-                      <p className="capitalize text-xl ml-8">{pet.name}</p>
+                      <div>
+                        <p className="capitalize text-xl ml-8">
+                          {object?.Pet?.name}
+                        </p>
+                        <p className="capitalize text-xs ml-8">
+                          {object?.Dog_Breed?.breed}{" "}
+                          {object?.Dog_Breed?.hair_type}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex justify-center items-center gap-6">
-                      <button onClick={() => editPetHandler(pet)}>
+                      <button onClick={() => editPetHandler(object?.Pet?.id)}>
                         <FontAwesomeIcon
                           icon={faEdit}
                           className="fas fa-edit h-4 w-4"
                         />
                       </button>
-                      <button onClick={() => showDeletePetModal(pet)}>
+                      <button onClick={() => showDeletePetModal(object?.Pet)}>
                         <FontAwesomeIcon
                           icon={faTrash}
                           className="fas fa-trash h-4 w-4"
@@ -194,7 +240,7 @@ export default function PetsDetails() {
       ) : (
         <div className="bg-base-100 rounded-box shadow-xl p-8">
           <form action={formHandler} className="form-control flex gap-6">
-            {petToEditInfo?.id && (
+            {petToEditInfo?.Pet?.id && (
               <input
                 type="text"
                 name="pet_id"
@@ -213,11 +259,48 @@ export default function PetsDetails() {
                   type="text"
                   name="pet_name"
                   placeholder="Scooby"
-                  defaultValue={petToEditInfo?.name || ""}
+                  defaultValue={petToEditInfo?.Pet?.name || ""}
                   required
                 />
               </label>
             </div>
+            {/* TODO: show the dog breed */}
+            <div className="space-y-1">
+              <p className="text-md">Start typing Breed</p>
+              <label
+                htmlFor="pet_breed_search"
+                className="input input-bordered flex items-center gap-2 w-full"
+              >
+                <input
+                  type="text"
+                  name="pet_breed_search"
+                  placeholder="Border Collie..."
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+            {dogBreedResults.length ? (
+              <div className="space-y-1">
+                <label htmlFor="dog_breed_id">
+                  <select
+                    className="select select-bordered w-full"
+                    name="dog_breed_id"
+                    defaultValue="default"
+                    required
+                  >
+                    <option value={"default"} disabled>
+                      Select Your Dog Breed
+                    </option>
+                    {dogBreedResults.map((breed: DogBreed) => (
+                      <option
+                        value={breed.id}
+                      >{`${breed.breed} ${breed.hair_type}`}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            ) : null}
+
             <div className="space-y-1">
               <p className="text-md">Birthday</p>
               <label
@@ -229,59 +312,44 @@ export default function PetsDetails() {
                   name="pet_birthday"
                   max={`${moment().format("YYYY-MM-DD")}`}
                   defaultValue={
-                    moment(petToEditInfo?.birthday).format("YYYY-MM-DD") || ""
+                    moment(petToEditInfo?.Pet?.birthday).format("YYYY-MM-DD") ||
+                    ""
                   }
                   required
                 />
               </label>
             </div>
             <div className="space-y-1">
-              <p className="text-md">Weight (KG)</p>
-              <label
-                htmlFor="pet_weight"
-                className="input input-bordered flex items-center gap-2"
-              >
-                <input
-                  step="0.1"
-                  type="number"
-                  name="pet_weight"
-                  placeholder="10.5"
-                  defaultValue={petToEditInfo?.weight || ""}
-                  required
-                />
-              </label>
-            </div>
-            <div className="space-y-1">
-              <p className="text-md">Species</p>
-              <label htmlFor="pet_type">
+              <p className="text-md">Neutered</p>
+              <label htmlFor="pet_neutered">
                 <select
                   className="select select-bordered w-full"
-                  name="pet_type"
-                  defaultValue={petToEditInfo?.type || "default"}
+                  name="pet_neutered"
+                  defaultValue={petToEditInfo?.Pet?.neutered || "default"}
                   required
                 >
                   <option value={"default"} disabled>
-                    Select Species
+                    Select Pet Neutered
                   </option>
-                  <option value="cat">Cat</option>
-                  <option value="dog">Dog</option>
+                  <option value="pet_neutered_true">Yes</option>
+                  <option value="pet_neutered_false">No</option>
                 </select>
               </label>
             </div>
             <div className="space-y-1">
-              <p className="text-md">Fur Type</p>
-              <label htmlFor="pet_fur_type">
+              <p className="text-md">Sex</p>
+              <label htmlFor="pet_sex">
                 <select
                   className="select select-bordered w-full"
-                  name="pet_fur_type"
-                  defaultValue={petToEditInfo?.fur_type || "default"}
+                  name="pet_sex"
+                  defaultValue={petToEditInfo?.Pet?.sex || "default"}
                   required
                 >
                   <option value={"default"} disabled>
-                    Select Fur Type
+                    Select Pet Sex
                   </option>
-                  <option value="long_hair">Long Hair</option>
-                  <option value="short_hair">Short Hair</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
               </label>
             </div>

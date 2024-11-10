@@ -19,7 +19,6 @@ export default function BusinessDetails() {
     getBusinessById(params.id);
   }, []);
 
-  // TODO: export this to a helpers function?
   const groomerBusinessDetailsOrganiser = (businessToOrganise: any) => {
     return businessToOrganise.reduce(
       (acc: any, row: any) => {

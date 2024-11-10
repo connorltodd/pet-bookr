@@ -18,7 +18,6 @@ export default function OnboardingCompletionPage() {
   const { onboardingData, setOnboardingData } = useContext(OnboardingContext);
 
   useEffect(() => {
-    console.log("use effect");
     saveUserOnboardingInfo();
   }, []);
 

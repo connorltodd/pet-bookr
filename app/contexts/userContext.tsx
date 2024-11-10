@@ -15,7 +15,7 @@ interface UserContextType {
   user: User | null;
   pets: Pet[];
   setUser: (user: User | null) => void;
-  setPets: (pets: Pet[]) => void;
+  setPets: (pets: any) => void;
 }
 
 // Create the context with default values
@@ -28,7 +28,7 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [pets, setPets] = useState<Pet[]>([]);
+  const [pets, setPets] = useState<any>([]);
 
   const getUserDetails = async () => {
     const fetchedUser: User | undefined = await getUser();
@@ -37,7 +37,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       const userPets: Pet[] | undefined = await getUserPets(
         fetchedUser.id as number
       );
-      if (userPets) setPets(userPets as Pet[]);
+      if (userPets) setPets(userPets as any);
     }
   };
 

@@ -1,21 +1,46 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import { OnboardingContext } from "@/app/contexts/onboardingContext";
-import { Pet } from "@/app/types";
+import { DogBreed, Pet } from "@/app/types";
 import Image from "next/image";
 import Link from "next/link";
 
 import dogIcon from "@/app/assets/images/dog-icon.png";
 import catIcon from "@/app/assets/images/cat-icon.png";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { searchDogBreeds } from "@/app/actions/dog-breed";
 
 export default function PetsOnboardingPage() {
   const { onboardingData, setOnboardingData } = useContext(OnboardingContext);
   const [isAddNewPetFormDisplayed, setAddNewPetFormDisplay] = useState(true);
+  const [dogBreedResults, setDogBreedResults] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // useEffect to delay the search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchTerm) {
+        dogBreedSearch(searchTerm);
+      }
+    }, 2000);
+
+    // Clear the timeout if searchTerm changes before 2 seconds
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const dogBreedSearch = async (breedSearchValue: string) => {
+    const response = await searchDogBreeds(breedSearchValue);
+    setDogBreedResults(response as any);
+  };
 
   useEffect(() => {
     if (onboardingData?.pets?.length) {
@@ -25,18 +50,19 @@ export default function PetsOnboardingPage() {
 
   const addPet = (formData: FormData) => {
     const petName = formData.get("pet_name") as string;
+    const petSex = formData.get("pet_sex") as string;
+    const petNeutered = formData.get("pet_neutered") as string;
     const petBirthday = formData.get("pet_birthday") as string;
-    const petWeight = Number(formData.get("pet_weight")) as number;
-    const petType = formData.get("pet_type") as string;
-    const petFurType = formData.get("pet_fur_type") as string;
+    const dogBreedId = Number(formData.get("dog_breed_id")) as number;
 
     const newPet: Pet = {
       id: uuidv4(),
       name: petName,
-      weight: petWeight,
+      sex: petSex,
+      neutered: petNeutered === "pet_neutered_true" ? true : false,
+      type: "dog",
       birthday: petBirthday,
-      fur_type: petFurType,
-      type: petType,
+      dog_breed_id: dogBreedId,
     };
 
     setOnboardingData({
@@ -84,6 +110,42 @@ export default function PetsOnboardingPage() {
               </label>
             </div>
             <div className="space-y-1">
+              <p className="text-md">Start typing Breed</p>
+              <label
+                htmlFor="pet_breed_search"
+                className="input input-bordered flex items-center gap-2 w-full"
+              >
+                <input
+                  type="text"
+                  name="pet_breed_search"
+                  placeholder="Border Collie..."
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+            {dogBreedResults.length ? (
+              <div className="space-y-1">
+                <label htmlFor="dog_breed_id">
+                  <select
+                    className="select select-bordered w-full"
+                    name="dog_breed_id"
+                    defaultValue="default"
+                    required
+                  >
+                    <option value={"default"} disabled>
+                      Select Your Dog Breed
+                    </option>
+                    {dogBreedResults.map((breed: DogBreed) => (
+                      <option
+                        value={breed.id}
+                      >{`${breed.breed} ${breed.hair_type}`}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            ) : null}
+
+            <div className="space-y-1">
               <p className="text-md">Birthday</p>
               <label
                 htmlFor="pet_birthday"
@@ -98,51 +160,36 @@ export default function PetsOnboardingPage() {
               </label>
             </div>
             <div className="space-y-1">
-              <p className="text-md">Weight (KG)</p>
-              <label
-                htmlFor="pet_weight"
-                className="input input-bordered flex items-center gap-2"
-              >
-                <input
-                  step="0.1"
-                  type="number"
-                  name="pet_weight"
-                  placeholder="10.5"
-                  required
-                />
-              </label>
-            </div>
-            <div className="space-y-1">
-              <p className="text-md">Species</p>
-              <label htmlFor="pet_type">
+              <p className="text-md">Neutered</p>
+              <label htmlFor="pet_neutered">
                 <select
                   className="select select-bordered w-full"
-                  name="pet_type"
+                  name="pet_neutered"
                   defaultValue="default"
                   required
                 >
                   <option value={"default"} disabled>
-                    Select Species
+                    Select Pet Neutered
                   </option>
-                  <option value="cat">Cat</option>
-                  <option value="dog">Dog</option>
+                  <option value="pet_neutered_true">Yes</option>
+                  <option value="pet_neutered_false">No</option>
                 </select>
               </label>
             </div>
             <div className="space-y-1">
-              <p className="text-md">Fur Type</p>
-              <label htmlFor="pet_fur_type">
+              <p className="text-md">Sex</p>
+              <label htmlFor="pet_sex">
                 <select
                   className="select select-bordered w-full"
-                  name="pet_fur_type"
+                  name="pet_sex"
                   defaultValue="default"
                   required
                 >
                   <option value={"default"} disabled>
-                    Select Fur Type
+                    Select Pet Sex
                   </option>
-                  <option value="long_hair">Long Hair</option>
-                  <option value="short_hair">Short Hair</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
               </label>
             </div>

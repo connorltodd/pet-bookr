@@ -9,6 +9,7 @@ export type User = {
   county?: string;
   postcode?: string;
   country?: string;
+  phone_number?: string;
 };
 
 export type AddressSuggestions = {
@@ -34,11 +35,20 @@ export type AddressDetails = {
 export type Pet = {
   id?: string;
   name: string;
-  weight?: number;
+  sex?: string;
+  neutered?: boolean;
   type: string;
-  fur_type?: string;
   birthday?: string;
+  dog_breed_id?: number;
   owner_id?: string;
+};
+
+export type DogBreed = {
+  id?: string;
+  breed?: string;
+  hair_type?: string;
+  dog_size?: string;
+  adult_start_age?: string;
 };
 
 export type Business = {

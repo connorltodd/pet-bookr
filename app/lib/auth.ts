@@ -15,12 +15,14 @@ export async function signup(prevState: unknown, formData: FormData) {
   const password = formData.get("password") as string;
   const first_name = formData.get("first_name") as string;
   const last_name = formData.get("last_name") as string;
+  const phone_number = formData.get("phone_number");
 
   const petOwner = {
     email,
     password,
     first_name,
     last_name,
+    phone_number,
   };
 
   try {

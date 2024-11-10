@@ -28,6 +28,7 @@ interface UserInfo {
   first_name: string;
   last_name: string;
   email: string;
+  phone_number?: string;
   // add other properties as needed
 }
 
@@ -40,6 +41,7 @@ export async function updateUser(
       first_name: userInfo.first_name,
       last_name: userInfo.last_name,
       email: userInfo.email,
+      phone_number: userInfo.phone_number,
     });
 
     // Check if userUpdate is an object and has a 'data' property that is of type 'User'

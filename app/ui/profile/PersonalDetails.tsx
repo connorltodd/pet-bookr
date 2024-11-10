@@ -16,10 +16,11 @@ export default function PersonalDetails() {
     const first_name = formData.get("first_name") as string;
     const last_name = formData.get("last_name") as string;
     const email = formData.get("email") as string;
+    const phone_number = formData.get("phone_number") as string;
 
     if (user?.id !== undefined) {
       const updatedUser: User | undefined = await updateUser(
-        { first_name, last_name, email },
+        { first_name, last_name, email, phone_number },
         user.id as number
       );
 
@@ -50,6 +51,10 @@ export default function PersonalDetails() {
           <div>
             <p className="text-sm">Last Name:</p>
             <p className="text-md">{user?.last_name}</p>
+          </div>
+          <div>
+            <p className="text-sm">Phone Number:</p>
+            <p className="text-md">{user?.phone_number}</p>
           </div>
           <div>
             <p className="text-sm">Email:</p>
@@ -94,6 +99,22 @@ export default function PersonalDetails() {
                   id="last_name"
                   required
                   defaultValue={user?.last_name}
+                />
+              </label>
+            </div>
+            <div className="space-y-3">
+              <p className="text-sm">Phone Number</p>
+              <label
+                htmlFor="phone_number"
+                className="input input-bordered flex items-center gap-2"
+              >
+                <input
+                  className="grow"
+                  type="text"
+                  name="phone_number"
+                  id="phone_number"
+                  required
+                  defaultValue={user?.phone_number}
                 />
               </label>
             </div>
