@@ -11,7 +11,7 @@ export default function Profile() {
   return (
     <div className="px-4">
       <div className="w-90 max-w-[550px] m-auto mt-10">
-        <h1 className="text-xl my-7">
+        <h1 className="text-xl my-7 capitalize">
           Welcome {user?.first_name} {user?.last_name}
         </h1>
         <div className="flex flex-col gap-6">

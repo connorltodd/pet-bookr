@@ -65,6 +65,9 @@ export default function PetsOnboardingPage() {
       dog_breed_id: dogBreedId,
     };
 
+    if (newPet.dog_breed_id === 0) {
+      return;
+    }
     setOnboardingData({
       ...onboardingData,
       pets: [...onboardingData.pets, newPet],
@@ -165,12 +168,9 @@ export default function PetsOnboardingPage() {
                 <select
                   className="select select-bordered w-full"
                   name="pet_neutered"
-                  defaultValue="default"
+                  defaultValue="pet_neutered_false"
                   required
                 >
-                  <option value={"default"} disabled>
-                    Select Pet Neutered
-                  </option>
                   <option value="pet_neutered_true">Yes</option>
                   <option value="pet_neutered_false">No</option>
                 </select>
@@ -182,12 +182,9 @@ export default function PetsOnboardingPage() {
                 <select
                   className="select select-bordered w-full"
                   name="pet_sex"
-                  defaultValue="default"
+                  defaultValue="male"
                   required
                 >
-                  <option value={"default"} disabled>
-                    Select Pet Sex
-                  </option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
