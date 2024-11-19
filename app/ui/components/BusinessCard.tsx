@@ -1,5 +1,4 @@
 import { Business } from "@/app/types";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function BusinessCard(business: Business) {

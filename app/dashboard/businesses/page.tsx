@@ -3,31 +3,50 @@
 import { searchGroomerBusinesses } from "@/app/actions/groomer-businesses";
 import { Business } from "@/app/types";
 import BusinessCard from "@/app/ui/components/BusinessCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Businesses() {
+  const router = useRouter();
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [searchTermText, setSearchTerm] = useState("");
+  const searchParams = useSearchParams();
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  useEffect(() => {
+    if (searchParams) {
+      const searchQuery = searchParams.get("search");
+      if (searchQuery) {
+        setSearchTerm(searchQuery);
+        fetchBusinesses(decodeURIComponent(searchQuery));
+      }
+    }
+  }, []);
 
-    const formData = new FormData(event.currentTarget);
-    const searchTerm = formData.get("groomer_search") as string;
-    setSearchTerm(searchTerm);
-    const groomerBusinesses = await searchGroomerBusinesses(searchTerm);
+  const fetchBusinesses = async (businessSearchValue: string) => {
+    setSearchTerm(businessSearchValue);
+    const groomerBusinesses = await searchGroomerBusinesses(
+      businessSearchValue
+    );
 
     if (groomerBusinesses?.data) {
       setBusinesses(groomerBusinesses?.data as Business[]);
+      router.push(`?search=${encodeURIComponent(businessSearchValue)}`);
     } else {
       setBusinesses([]);
     }
   };
 
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const searchTerm = formData.get("groomer_search") as string;
+    fetchBusinesses(searchTerm);
+  };
+
   return (
     <div>
       <div className="container m-auto mt-14">
-        {/* TODO: Implement search functionality */}
         <form
           onSubmit={onSubmit}
           className="flex justify-center items-center gap-6 w-[90vw] md:w-[600px] m-auto mb-5 md:min-w-[300px]"
@@ -40,6 +59,7 @@ export default function Businesses() {
               type="text"
               name="groomer_search"
               id="groomer_search"
+              defaultValue={searchTermText ? searchTermText : ""}
               required
               className="input input-bordered text-sm w-full"
               placeholder="Search Groomers nearby..."
@@ -49,9 +69,9 @@ export default function Businesses() {
         </form>
 
         <div className="max-w-[1216px] m-auto pt-20 pb-20 flex flex-col justify-center">
-          <div>
+          <div className="w-[90%] m-auto">
             {businesses.length ? (
-              <h1 className="text-xl text-center xl:text-left font-bold capitalize">
+              <h1 className="text-lg text-center xl:text-left font-bold capitalize">
                 {businesses.length} pet groomer shops matched your search!
               </h1>
             ) : null}
@@ -62,7 +82,7 @@ export default function Businesses() {
                 ))}
               </div>
             ) : searchTermText !== "" ? (
-              <h1 className="text-xl text-center xl:text-left font-bold">
+              <h1 className="text-lg text-center xl:text-left font-bold">
                 No Groomers were found for the search: {searchTermText}
               </h1>
             ) : null}
@@ -71,7 +91,4 @@ export default function Businesses() {
       </div>
     </div>
   );
-}
-function useEffect(arg0: () => void, arg1: never[]) {
-  throw new Error("Function not implemented.");
 }
