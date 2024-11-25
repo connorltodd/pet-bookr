@@ -10,11 +10,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import BusinessAbout from "@/app/ui/components/BusinessCardComponents/BusinessAbout";
+import BusinessPortfolioPhotos from "@/app/ui/components/BusinessCardComponents/BusinessPortfolioPhotos";
 
 export default function BusinessDetails() {
   const router = useRouter();
   const [groomer, setGroomer] = useState<BusinessDetailsType>();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [businessDetailsMenu, setBusinessDetailsMenu] = useState("services");
   const params = useParams<{ id: string }>();
 
   useEffect(() => {
@@ -58,6 +61,7 @@ export default function BusinessDetails() {
       businessData?.data
     );
     setGroomer(groomerBusinessData as any);
+    console.log(groomerBusinessData);
   };
 
   const handleNextSlide = () => {
@@ -76,8 +80,12 @@ export default function BusinessDetails() {
     }
   };
 
+  const businessDetailsMenuHandler = (menuValue: string) =>
+    setBusinessDetailsMenu(menuValue);
+
+  console.log(groomer);
   return (
-    <div className="w-[90vw] lg:w-[800px] m-auto flex-col gap-4 items-center mt-20">
+    <div className="w-[90vw] lg:w-[600px] m-auto flex-col gap-4 items-center mt-10 pb-20">
       <button onClick={() => router.back()} className="flex items-center gap-4">
         <FontAwesomeIcon
           icon={faArrowLeft}
@@ -85,37 +93,36 @@ export default function BusinessDetails() {
         />
         <h1 className="text-xl my-7">Back</h1>
       </button>
-      <div className="card bg-base-100 shadow-xl cursor-pointer relative">
-        <div className="carousel w-full rounded-t-lg">
-          {groomer?.portfolioPhotos?.length ? (
-            groomer.portfolioPhotos.map(
-              (portfolioPhoto: PortfolioPhotoType, index) => (
-                <div
-                  key={index}
-                  className={`carousel-item absolute inset-0 transition-opacity ${
-                    index === currentSlide
-                      ? "opacity-100 z-10"
-                      : "opacity-0 z-0"
-                  }`}
-                >
-                  <img
-                    src={portfolioPhoto.photo_url}
-                    alt={`Portfolio Photo ${index + 1}`}
-                    className="w-full h-[300px] object-cover rounded-t-lg"
-                  />
-                </div>
-              )
-            )
-          ) : (
-            <p className="text-center py-4">No photos available</p>
-          )}
-          <div className="absolute left-5 z-10 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <button onClick={handlePrevSlide} className="btn btn-circle">
-              ❮
-            </button>
-            <button onClick={handleNextSlide} className="btn btn-circle">
-              ❯
-            </button>
+      <div className="card bg-base-100 shadow-xl cursor-pointer">
+        <div className="relative">
+          <div className="carousel w-full rounded-t-lg">
+            {groomer?.portfolioPhotos?.length &&
+              groomer.portfolioPhotos.map(
+                (portfolioPhoto: PortfolioPhotoType, index) => (
+                  <div
+                    key={index}
+                    className={`carousel-item absolute inset-0 transition-opacity ${
+                      index === currentSlide
+                        ? "opacity-100 z-10"
+                        : "opacity-0 z-0"
+                    }`}
+                  >
+                    <img
+                      src={portfolioPhoto.photo_url}
+                      alt={`Portfolio Photo ${index + 1}`}
+                      className="w-full h-[300px] object-cover rounded-t-lg"
+                    />
+                  </div>
+                )
+              )}
+            <div className="absolute left-5 z-10 right-5 top-[220px] flex transform justify-between">
+              <button onClick={handlePrevSlide} className="btn btn-circle">
+                ❮
+              </button>
+              <button onClick={handleNextSlide} className="btn btn-circle">
+                ❯
+              </button>
+            </div>
           </div>
         </div>
         <div className="card-body mt-[300px]">
@@ -152,11 +159,42 @@ export default function BusinessDetails() {
               }`}
             </span>
           </p>
-          <div className="mt-6 flex gap-4 justify-start">
-            <p className="capitalize font-bold text-sm">Services</p>
-            <p className="capitalize font-bold text-sm">Reviews</p>
-            <p className="capitalize font-bold text-sm">Photos</p>
-            <p className="capitalize font-bold text-sm">About</p>
+          <div className="mt-6 flex gap-4 justify-between">
+            <button
+              onClick={() => businessDetailsMenuHandler("services")}
+              className="capitalize font-bold text-sm"
+            >
+              Services
+            </button>
+            <button
+              onClick={() => businessDetailsMenuHandler("reviews")}
+              className="capitalize font-bold text-sm"
+            >
+              Reviews
+            </button>
+            <button
+              onClick={() => businessDetailsMenuHandler("photos")}
+              className="capitalize font-bold text-sm"
+            >
+              Photos
+            </button>
+            <button
+              onClick={() => setBusinessDetailsMenu("about")}
+              className="capitalize font-bold text-sm"
+            >
+              About
+            </button>
+          </div>
+
+          {/* TODO: complete the reviews section and services section plus add in the business contact number on about */}
+          {/* TODO: add a loading skeleton for the business id page */}
+          <div className="mt-8 mb-5">
+            {businessDetailsMenu === "photos" && groomer && (
+              <BusinessPortfolioPhotos photos={groomer?.portfolioPhotos} />
+            )}
+            {businessDetailsMenu === "about" && (
+              <BusinessAbout {...groomer?.business} />
+            )}
           </div>
         </div>
       </div>
