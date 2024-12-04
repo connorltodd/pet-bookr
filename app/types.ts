@@ -77,10 +77,3 @@ export type PortfolioPhoto = {
   id: number;
   photo_url: string;
 };
-
-// TODO: correctly type groomerServices
-export type BusinessDetails = {
-  business: Business | null;
-  portfolioPhotos: PortfolioPhoto[];
-  groomerServices: [];
-};

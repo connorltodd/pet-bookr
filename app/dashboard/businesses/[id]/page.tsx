@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { getData } from "@/app/lib/apiClient";
 import {
-  BusinessDetails as BusinessDetailsType,
+  Business as GroomerBusinessType,
   PortfolioPhoto as PortfolioPhotoType,
 } from "@/app/types";
 import { useEffect, useState } from "react";
@@ -12,70 +12,68 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import BusinessAbout from "@/app/ui/components/BusinessCardComponents/BusinessAbout";
 import BusinessPortfolioPhotos from "@/app/ui/components/BusinessCardComponents/BusinessPortfolioPhotos";
+import moment from "moment";
 
 export default function BusinessDetails() {
   const router = useRouter();
-  const [groomer, setGroomer] = useState<BusinessDetailsType>();
+  const [groomer, setGroomerDetails] = useState<GroomerBusinessType>();
+  const [groomerPortfolioPhotos, setGroomerPortfolioPhotos] = useState<
+    PortfolioPhotoType[]
+  >([]);
+  // TODO: render out services and reviews and types
+  //
+  const [groomerServices, setGroomerServices] = useState([]);
+  const [groomerReviews, setGroomerReviews] = useState([]);
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [businessDetailsMenu, setBusinessDetailsMenu] = useState("services");
   const params = useParams<{ id: string }>();
 
   useEffect(() => {
-    getBusinessById(params.id);
+    getBusinessInfoById(params.id);
+    getBusinessPortfolioPhotos(params.id);
+    getBusinessServices(params.id);
+    getBusinessReviews(params.id);
   }, []);
 
-  const groomerBusinessDetailsOrganiser = (businessToOrganise: any) => {
-    return businessToOrganise.reduce(
-      (acc: any, row: any) => {
-        if (!acc.groomerBusiness) {
-          acc.business = row.groomerBusiness;
-        }
-
-        if (
-          row.portfolioPhoto &&
-          !acc.portfolioPhotos.some((p: any) => p.id === row.portfolioPhoto.id)
-        ) {
-          acc.portfolioPhotos.push(row.portfolioPhoto);
-        }
-
-        if (
-          row.groomerService &&
-          !acc.groomerServices.some((s: any) => s.id === row.groomerService.id)
-        ) {
-          acc.groomerServices.push(row.groomerService);
-        }
-
-        return acc;
-      },
-      {
-        business: null,
-        portfolioPhotos: [],
-        groomerServices: [],
-      }
+  const getBusinessServices = async (id: string) => {
+    const businessServices = await getData<any>(
+      `/groomer-services/groomer-business/${id}`
     );
+    setGroomerServices(businessServices?.data as any);
   };
 
-  const getBusinessById = async (id: string) => {
-    const businessData = await getData<any>(`/groomer-businesses/${params.id}`);
-    const groomerBusinessData = groomerBusinessDetailsOrganiser(
-      businessData?.data
+  const getBusinessReviews = async (id: string) => {
+    const businessReviews = await getData<any>(
+      `/reviews/groomer-business/${id}`
     );
-    setGroomer(groomerBusinessData as any);
-    console.log(groomerBusinessData);
+    setGroomerReviews(businessReviews?.data as any);
+  };
+
+  const getBusinessPortfolioPhotos = async (id: string) => {
+    const businessPhotos = await getData<any>(
+      `/portfolio-photos/groomer-business/${id}`
+    );
+    setGroomerPortfolioPhotos(businessPhotos?.data as any);
+  };
+
+  const getBusinessInfoById = async (id: string) => {
+    const businessData = await getData<any>(`/groomer-businesses/${id}`);
+    setGroomerDetails(businessData?.data[0] as any);
   };
 
   const handleNextSlide = () => {
-    if (groomer?.portfolioPhotos) {
+    if (groomerPortfolioPhotos.length) {
       setCurrentSlide((prev) =>
-        prev + 1 === groomer.portfolioPhotos.length ? 0 : prev + 1
+        prev + 1 === groomerPortfolioPhotos.length ? 0 : prev + 1
       );
     }
   };
 
   const handlePrevSlide = () => {
-    if (groomer?.portfolioPhotos) {
+    if (groomerPortfolioPhotos.length) {
       setCurrentSlide((prev) =>
-        prev === 0 ? groomer.portfolioPhotos.length - 1 : prev - 1
+        prev === 0 ? groomerPortfolioPhotos.length - 1 : prev - 1
       );
     }
   };
@@ -83,7 +81,8 @@ export default function BusinessDetails() {
   const businessDetailsMenuHandler = (menuValue: string) =>
     setBusinessDetailsMenu(menuValue);
 
-  console.log(groomer);
+  console.log("groomerReviews", groomerReviews);
+
   return (
     <div className="w-[90vw] lg:w-[600px] m-auto flex-col gap-4 items-center mt-10 pb-20">
       <button onClick={() => router.back()} className="flex items-center gap-4">
@@ -96,8 +95,8 @@ export default function BusinessDetails() {
       <div className="card bg-base-100 shadow-xl cursor-pointer">
         <div className="relative">
           <div className="carousel w-full rounded-t-lg">
-            {groomer?.portfolioPhotos?.length &&
-              groomer.portfolioPhotos.map(
+            {groomerPortfolioPhotos?.length &&
+              groomerPortfolioPhotos.map(
                 (portfolioPhoto: PortfolioPhotoType, index) => (
                   <div
                     key={index}
@@ -126,37 +125,22 @@ export default function BusinessDetails() {
           </div>
         </div>
         <div className="card-body mt-[300px]">
-          <p className="text-md font-bold capitalize">
-            {groomer?.business?.name}
-          </p>
+          <p className="text-md font-bold capitalize">{groomer?.name}</p>
           <p className="text-xs">
             <span className="capitalize">
-              {`${
-                groomer?.business?.address_line_1 &&
-                `${groomer?.business?.address_line_1},`
-              }`}
+              {`${groomer?.address_line_1 && `${groomer?.address_line_1},`}`}
             </span>
             <span className="capitalize">
-              {` ${
-                groomer?.business?.address_line_2 &&
-                `${groomer?.business?.address_line_2},`
-              }`}
+              {` ${groomer?.address_line_2 && `${groomer?.address_line_2},`}`}
             </span>
             <span className="capitalize">
-              {` ${
-                groomer?.business?.town_or_city &&
-                `${groomer?.business?.town_or_city},`
-              }`}
+              {` ${groomer?.town_or_city && `${groomer?.town_or_city},`}`}
             </span>
             <span className="capitalize">
-              {` ${
-                groomer?.business?.county && `${groomer?.business?.county},`
-              }`}
+              {` ${groomer?.county && `${groomer?.county},`}`}
             </span>
             <span className="uppercase">
-              {` ${
-                groomer?.business?.postcode && `${groomer?.business?.postcode}`
-              }`}
+              {` ${groomer?.postcode && `${groomer?.postcode}`}`}
             </span>
           </p>
           <div className="mt-6 flex gap-4 justify-between">
@@ -189,12 +173,49 @@ export default function BusinessDetails() {
           {/* TODO: complete the reviews section and services section plus add in the business contact number on about */}
           {/* TODO: add a loading skeleton for the business id page */}
           <div className="mt-8 mb-5">
-            {businessDetailsMenu === "photos" && groomer && (
-              <BusinessPortfolioPhotos photos={groomer?.portfolioPhotos} />
+            {businessDetailsMenu === "reviews" ? (
+              groomerReviews.length ? (
+                groomerReviews.map((reviewData, index) => {
+                  const { review, pet_owner_first_name, pet_owner_last_name } =
+                    reviewData;
+                  const { star_rating, description, created_at } = review;
+
+                  return (
+                    <div className="review-item mb-7">
+                      <div className="flex gap-2 items-center mb-2">
+                        <div className="rating">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <input
+                              key={i}
+                              type="radio"
+                              className="mask mask-star-2 bg-yellow-400 h-4 w-4"
+                              checked={i + 1 === star_rating}
+                              readOnly
+                            />
+                          ))}
+                        </div>
+                        <h3 className="text-sm">
+                          {pet_owner_first_name} {pet_owner_last_name}
+                        </h3>
+                      </div>
+                      <p className="text-md">{description}</p>
+                      <p className="text-sm text-slate-500 mt-2">
+                        {moment(created_at).format("MMM Do YYYY, HH:MM")}
+                      </p>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-center">
+                  No reviews available for this business.
+                </p>
+              )
+            ) : null}
+
+            {businessDetailsMenu === "photos" && groomerPortfolioPhotos && (
+              <BusinessPortfolioPhotos photos={groomerPortfolioPhotos} />
             )}
-            {businessDetailsMenu === "about" && (
-              <BusinessAbout {...groomer?.business} />
-            )}
+            {businessDetailsMenu === "about" && <BusinessAbout {...groomer} />}
           </div>
         </div>
       </div>
