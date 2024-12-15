@@ -1,3 +1,5 @@
+import { Business } from "@/app/types";
+
 export default function BusinessDetails(groomerBusinessDetails: any) {
   return (
     <>
@@ -28,6 +30,8 @@ export default function BusinessDetails(groomerBusinessDetails: any) {
       <p className="text-sm mt-2 flex justify-between">
         <span>Sunday:</span> {groomerBusinessDetails?.sunday_operating_hours}
       </p>
+      <p className="text-sm font-bold mt-10">Phone Number</p>
+      <p className="text-sm mt-2">{groomerBusinessDetails?.phone_number}</p>
     </>
   );
 }

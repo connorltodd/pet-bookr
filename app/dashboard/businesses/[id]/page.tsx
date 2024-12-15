@@ -12,8 +12,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import BusinessAbout from "@/app/ui/components/BusinessCardComponents/BusinessAbout";
 import BusinessPortfolioPhotos from "@/app/ui/components/BusinessCardComponents/BusinessPortfolioPhotos";
-import moment from "moment";
 import LoadingBusinessDetails from "@/app/ui/components/LoadingComponents/LoadingBusinessDetails/LoadingBusinessDetails";
+import BusinessReviews from "@/app/ui/components/BusinessCardComponents/BusinessReviews";
+import { formatPrice } from "@/app/lib/priceHelper";
 
 export default function BusinessDetails() {
   const router = useRouter();
@@ -115,7 +116,7 @@ export default function BusinessDetails() {
             />
             <h1 className="text-xl my-7">Back</h1>
           </button>
-          <div className="card bg-base-100 shadow-xl cursor-pointer">
+          <div className="card bg-base-100 shadow-xl cursor-pointer z-[1]">
             <div className="relative">
               <div className="carousel w-full rounded-t-lg">
                 {groomerPortfolioPhotos?.length &&
@@ -196,52 +197,28 @@ export default function BusinessDetails() {
                   About
                 </button>
               </div>
-
-              {/* TODO: complete the reviews section and services section plus add in the business contact number on about */}
-              {/* TODO: add a loading skeleton for the business id page */}
               <div className="mt-8 mb-5">
-                {businessDetailsMenu === "reviews" ? (
-                  groomerReviews.length ? (
-                    groomerReviews.map((reviewData, index) => {
-                      const {
-                        review,
-                        pet_owner_first_name,
-                        pet_owner_last_name,
-                      } = reviewData;
-                      const { star_rating, description, created_at } = review;
-
-                      return (
-                        <div className="review-item mb-7">
-                          <div className="flex gap-2 items-center mb-2">
-                            <div className="rating">
-                              {Array.from({ length: 5 }).map((_, i) => (
-                                <input
-                                  key={i}
-                                  type="radio"
-                                  className="mask mask-star-2 bg-yellow-400 h-4 w-4"
-                                  checked={i + 1 === star_rating}
-                                  readOnly
-                                />
-                              ))}
-                            </div>
-                            <h3 className="text-sm">
-                              {pet_owner_first_name} {pet_owner_last_name}
-                            </h3>
+                {businessDetailsMenu === "services" && (
+                  <div>
+                    {groomerServices.length ? (
+                      groomerServices.map((service: any) => (
+                        <div className="flex justify-between items-center mt-4">
+                          <p>{service.name}</p>
+                          <div>
+                            <p>{formatPrice(service.price)}</p>
                           </div>
-                          <p className="text-md">{description}</p>
-                          <p className="text-sm text-slate-500 mt-2">
-                            {moment(created_at).format("MMM Do YYYY, HH:MM")}
-                          </p>
                         </div>
-                      );
-                    })
-                  ) : (
-                    <p className="text-center">
-                      No reviews available for this business.
-                    </p>
-                  )
-                ) : null}
-
+                      ))
+                    ) : (
+                      <p className="text-center">
+                        No services available for this business.
+                      </p>
+                    )}
+                  </div>
+                )}
+                {businessDetailsMenu === "reviews" && (
+                  <BusinessReviews groomerReviews={groomerReviews} />
+                )}
                 {businessDetailsMenu === "photos" && groomerPortfolioPhotos && (
                   <BusinessPortfolioPhotos photos={groomerPortfolioPhotos} />
                 )}

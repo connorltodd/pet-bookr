@@ -70,6 +70,7 @@ export type Business = {
   saturday_operating_hours?: string;
   sunday_operating_hours?: string;
   header_image: string;
+  phone_number: string;
 };
 
 export type PortfolioPhoto = {
