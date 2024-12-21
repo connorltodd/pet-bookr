@@ -202,7 +202,10 @@ export default function BusinessDetails() {
                   <div>
                     {groomerServices.length ? (
                       groomerServices.map((service: any) => (
-                        <div className="flex justify-between items-center mt-4">
+                        <div
+                          key={service.id}
+                          className="flex justify-between items-center mt-4"
+                        >
                           <p>{service.name}</p>
                           <div>
                             <p>{formatPrice(service.price)}</p>
