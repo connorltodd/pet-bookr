@@ -10,10 +10,13 @@ export default function Businesses() {
   const router = useRouter();
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [searchTermText, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const searchParams = useSearchParams();
 
   useEffect(() => {
     if (searchParams) {
+      setLoading(true);
       const searchQuery = searchParams.get("search");
       if (searchQuery) {
         setSearchTerm(searchQuery);
@@ -34,11 +37,12 @@ export default function Businesses() {
     } else {
       setBusinesses([]);
     }
+    setLoading(false);
   };
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setLoading(true);
     const formData = new FormData(event.currentTarget);
     const searchTerm = formData.get("groomer_search") as string;
     fetchBusinesses(searchTerm);
@@ -68,24 +72,28 @@ export default function Businesses() {
           <button className="btn btn-primary min-w-24 max-w-28">Search</button>
         </form>
 
-        <div className="max-w-[1216px] m-auto pt-20 pb-20 flex flex-col justify-center">
-          <div className="w-[90%] m-auto">
-            {businesses.length ? (
-              <h1 className="text-lg text-center xl:text-left font-bold capitalize">
-                {businesses.length} pet groomer shops matched your search!
-              </h1>
-            ) : null}
-            {businesses.length ? (
-              <div className="mt-8 flex flex-wrap gap-8 items-center justify-center xl:justify-start pb-12">
-                {businesses.map((business: Business) => (
-                  <BusinessCard key={business?.id} {...business} />
-                ))}
-              </div>
-            ) : searchTermText !== "" ? (
-              <h1 className="text-lg text-center xl:text-left font-bold">
-                No Groomers were found for the search: {searchTermText}
-              </h1>
-            ) : null}
+        <div className="m-auto pt-20 pb-20 flex flex-col justify-center">
+          <div className="m-auto">
+            {loading ? null : (
+              <>
+                {businesses.length ? (
+                  <h1 className="text-md md:text-lg text-center xl:text-left font-bold capitalize">
+                    {businesses.length} pet groomer shops matched your search!
+                  </h1>
+                ) : null}
+                {businesses.length ? (
+                  <div className="mt-8 flex flex-wrap  items-center justify-center xl:justify-start gap-8 md:gap-4 pb-12">
+                    {businesses.map((business: Business) => (
+                      <BusinessCard key={business?.id} {...business} />
+                    ))}
+                  </div>
+                ) : searchTermText !== "" ? (
+                  <h1 className="text-md md:text-lg text-center xl:text-left font-bold">
+                    No Groomers were found for the search: {searchTermText}
+                  </h1>
+                ) : null}
+              </>
+            )}
           </div>
         </div>
       </div>

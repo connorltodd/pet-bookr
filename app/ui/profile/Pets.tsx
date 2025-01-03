@@ -21,7 +21,6 @@ export default function PetsDetails() {
   const [isFormDisplayed, setFormDisplay] = useState(false);
   const [formType, setFormType] = useState("create");
   const [petToDeleteInfo, setPetToDelete] = useState<Pet | null>();
-  // TODO: update the type here
   const [petToEditInfo, setPetToEdit] = useState<any | null>();
   const [dogBreedResults, setDogBreedResults] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -132,7 +131,7 @@ export default function PetsDetails() {
   };
 
   return (
-    <div className="w-90 max-w-[550px] m-auto mt-10 px-5">
+    <div className="w-90 max-w-[550px] m-auto mt-10 pb-10 px-5">
       {isToPetDeleteModalDisplayed && petToDeleteInfo !== null && (
         <Modal>
           <div>

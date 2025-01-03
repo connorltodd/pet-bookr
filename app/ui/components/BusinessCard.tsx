@@ -9,6 +9,7 @@ export default function BusinessCard(business: Business) {
         className="card bg-base-100 w-[90vw] md:w-96 shadow-xl cursor-pointer"
       >
         <figure className="h-40">
+          {/* eslint-disable-next-line */}
           <img src={business?.header_image} alt={business?.name} />
         </figure>
         <div className="card-body">

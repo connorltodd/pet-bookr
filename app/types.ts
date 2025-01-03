@@ -78,3 +78,33 @@ export type PortfolioPhoto = {
   id: number;
   photo_url: string;
 };
+
+export type Service = {
+  id: number;
+  booking_id: number;
+  service_name: string;
+};
+
+export type Employee = {
+  first_name: string;
+  last_name: string;
+};
+
+export type BookingDetails = {
+  id: number;
+  owner_id: number;
+  pet_id: number;
+  date: string; // ISO date string (e.g., "2024-12-26")
+  start_time: string; // ISO datetime string (e.g., "2024-12-26T12:00:00.000Z")
+  end_time: string; // ISO datetime string (e.g., "2024-12-26T13:00:00.000Z")
+  groomer_employee_id: number;
+  status: string;
+};
+
+export type Booking = {
+  booking: BookingDetails;
+  pet_name: string;
+  employee: Employee;
+  business_name: string;
+  services: Service[];
+};

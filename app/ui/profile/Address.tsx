@@ -35,7 +35,7 @@ export default function AddressDetails() {
     }
   };
   return (
-    <div className="w-90 max-w-[550px] m-auto mt-10 px-5">
+    <div className="w-90 max-w-[550px] m-auto mt-10 pb-10 px-5">
       <Link href="/dashboard/profile" className="flex items-center gap-4">
         <FontAwesomeIcon
           icon={faArrowLeft}

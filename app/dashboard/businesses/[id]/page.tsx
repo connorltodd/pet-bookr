@@ -130,6 +130,7 @@ export default function BusinessDetails() {
                             : "opacity-0 z-0"
                         }`}
                       >
+                        {/* eslint-disable-next-line */}
                         <img
                           src={portfolioPhoto.photo_url}
                           alt={`Portfolio Photo ${index + 1}`}
@@ -174,25 +175,41 @@ export default function BusinessDetails() {
               <div className="mt-6 flex gap-4 justify-between">
                 <button
                   onClick={() => businessDetailsMenuHandler("services")}
-                  className="capitalize font-bold text-sm"
+                  className={`${
+                    businessDetailsMenu === "services"
+                      ? "border-b-2 border-black"
+                      : ""
+                  } capitalize font-bold text-sm`}
                 >
                   Services
                 </button>
                 <button
                   onClick={() => businessDetailsMenuHandler("reviews")}
-                  className="capitalize font-bold text-sm"
+                  className={`${
+                    businessDetailsMenu === "reviews"
+                      ? "border-b-2 border-black"
+                      : ""
+                  } capitalize font-bold text-sm`}
                 >
                   Reviews
                 </button>
                 <button
                   onClick={() => businessDetailsMenuHandler("photos")}
-                  className="capitalize font-bold text-sm"
+                  className={`${
+                    businessDetailsMenu === "photos"
+                      ? "border-b-2 border-black"
+                      : ""
+                  } capitalize font-bold text-sm`}
                 >
                   Photos
                 </button>
                 <button
                   onClick={() => setBusinessDetailsMenu("about")}
-                  className="capitalize font-bold text-sm"
+                  className={`${
+                    businessDetailsMenu === "about"
+                      ? "border-b-2 border-black"
+                      : ""
+                  } capitalize font-bold text-sm`}
                 >
                   About
                 </button>
