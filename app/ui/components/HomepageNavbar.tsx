@@ -49,6 +49,16 @@ export default function HomepageNavbar() {
           <button
             onClick={() =>
               document
+                .getElementById("BENEFITS")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
+            className="text-md cursor-pointer"
+          >
+            Benefits
+          </button>
+          <button
+            onClick={() =>
+              document
                 .getElementById("FAQ")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" })
             }
@@ -92,7 +102,49 @@ export default function HomepageNavbar() {
             </div>
           </Link>
           <div className="w-[170px] m-auto flex flex-col gap-8 mt-8">
-            {/* TODO: copy the desktop menu options here */}
+            <button
+              onClick={() => {
+                setDrawerOpen(false);
+                document
+                  .getElementById("BENEFITS")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className="text-md cursor-pointer"
+            >
+              Benefits
+            </button>
+            <button
+              onClick={() => {
+                setDrawerOpen(false);
+                document
+                  .getElementById("FAQ")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className="text-md cursor-pointer"
+            >
+              FAQ
+            </button>
+            <button
+              onClick={() => {
+                setDrawerOpen(false);
+                document
+                  .getElementById("PRICING")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className="text-md cursor-pointer"
+            >
+              Pricing
+            </button>
+            <Link
+              className="text-md cursor-pointer btn btn-primary"
+              href="/login"
+            >
+              Login / Signup
+            </Link>
+            {/* TODO: connect the correct link here */}
+            <a className="text-md cursor-pointer btn btn-outline border-primary text-primary hover:btn-primary hover:text-white">
+              Business Signup
+            </a>
           </div>
         </nav>
       </div>
