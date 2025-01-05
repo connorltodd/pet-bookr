@@ -12,7 +12,7 @@ export default function RootLayout({
   const pathname = usePathname();
 
   return (
-    <div className="max-w-[1440px] m-auto">
+    <div className="max-w-7xl m-auto">
       <UserProvider>
         {!pathname.includes("/onboarding") && <Navbar />}
         {children}

@@ -226,6 +226,7 @@ export default function BusinessDetails() {
                           <p>{service.name}</p>
                           <div>
                             <p>{formatPrice(service.price)}</p>
+                            <p>{service.service_length} (mins)</p>
                           </div>
                         </div>
                       ))
