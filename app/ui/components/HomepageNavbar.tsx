@@ -66,16 +66,6 @@ export default function HomepageNavbar() {
           >
             FAQ
           </button>
-          <button
-            onClick={() =>
-              document
-                .getElementById("PRICING")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            }
-            className="text-md cursor-pointer"
-          >
-            Pricing
-          </button>
           <Link
             className="text-md cursor-pointer btn btn-primary"
             href="/login"
@@ -123,17 +113,6 @@ export default function HomepageNavbar() {
               className="text-md cursor-pointer"
             >
               FAQ
-            </button>
-            <button
-              onClick={() => {
-                setDrawerOpen(false);
-                document
-                  .getElementById("PRICING")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-              className="text-md cursor-pointer"
-            >
-              Pricing
             </button>
             <Link
               className="text-md cursor-pointer btn btn-primary"

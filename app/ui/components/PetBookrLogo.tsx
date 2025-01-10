@@ -19,7 +19,7 @@ export default function PetBookrLogo({
         width={width}
         alt="pet bookr"
       />
-      <h1 className={`${fontSize} font-semibold`}>Pet Bookr</h1>
+      <h1 className={`${fontSize} font-semibold text-black`}>Pet Bookr</h1>
     </div>
   );
 }
