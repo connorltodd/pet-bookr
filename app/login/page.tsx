@@ -17,11 +17,13 @@ export default function Login() {
     <div className="flex items-center justify-center min-h-lvh">
       <div>
         <div className="flex justify-center items-center pb-6 pt-6">
-          <PetBookrLogo
-            height={60}
-            width={60}
-            fontSize="text-2xl md:text-3xl"
-          />
+          <Link href="/">
+            <PetBookrLogo
+              height={60}
+              width={60}
+              fontSize="text-2xl md:text-3xl"
+            />
+          </Link>
         </div>
         <form
           className="w-[90vw] mb-5 md:min-w-[380px] max-w-[500px] form-control p-6 flex gap-4 bg-base-100 rounded-box shadow-xl"
